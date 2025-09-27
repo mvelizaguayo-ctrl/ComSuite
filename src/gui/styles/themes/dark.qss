@@ -1,0 +1,25 @@
+/* Tema oscuro para ComSuite */
+QWidget {
+    background-color: #2d2d30;
+    color: #f1f1f1;
+}
+
+QPushButton {
+    background-color: #0e639c;
+    color: white;
+}
+
+QPushButton:hover {
+    background-color: #1177bb;
+}
+
+QFrame#devicePanel {
+    background-color: #252526;
+    border: 1px solid #3e3e42;
+}
+
+QLineEdit, QComboBox {
+    background-color: #1e1e1e;
+    color: #f1f1f1;
+    border: 1px solid #3e3e42;
+}
