@@ -1,118 +1,169 @@
 # src/protocols/base_protocol/protocol_interface.py
-# Ruta completa: C:\Users\manue\ComSuite\src\protocols\base_protocol\protocol_interface.py
-
 from abc import ABC, abstractmethod
-from typing import List, Dict, Any, Optional
+from typing import Dict, List, Any, Optional
+from ..base_protocol.device_interface import DeviceInterface, DeviceStatus
 
 class ProtocolInterface(ABC):
-    """
-    Interfaz abstracta que todos los protocolos deben implementar.
-    Define el contrato para cualquier protocolo de comunicación en ComSuite.
-    """
+    """Interfaz abstracta para todos los protocolos."""
     
     @property
     @abstractmethod
     def name(self) -> str:
-        """Nombre del protocolo (ej: 'Modbus', 'CAN', 'PROFIBUS')"""
+        """Nombre del protocolo."""
         pass
     
     @property
     @abstractmethod
     def version(self) -> str:
-        """Versión del protocolo implementado"""
+        """Versión del protocolo."""
         pass
     
     @abstractmethod
     def connect(self, config: Dict[str, Any]) -> bool:
-        """
-        Conecta el protocolo usando la configuración proporcionada.
-        
-        Args:
-            config: Diccionario con parámetros de conexión específicos del protocolo
-                  (ej: {'ip': '192.168.1.10', 'port': 502} para Modbus TCP)
-        
-        Returns:
-            bool: True si la conexión fue exitosa, False en caso contrario
-        """
+        """Conectar al dispositivo usando la configuración proporcionada."""
         pass
     
     @abstractmethod
-    def disconnect(self) -> None:
-        """Desconecta el protocolo y libera recursos"""
+    def disconnect(self) -> bool:
+        """Desconectar del dispositivo."""
         pass
     
     @abstractmethod
     def is_connected(self) -> bool:
-        """
-        Verifica si el protocolo está actualmente conectado.
-        
-        Returns:
-            bool: True si está conectado, False en caso contrario
-        """
+        """Verificar si está conectado."""
         pass
     
     @abstractmethod
-    def read_data(self, device_id: str, address: int, count: int) -> List[int]:
+    def read_data(self, address: int, count: int) -> List[int]:
+        """Leer datos del dispositivo."""
+        pass
+    
+    @abstractmethod
+    def write_data(self, address: int, data: List[int]) -> bool:
+        """Escribir datos en el dispositivo."""
+        pass
+    
+    @abstractmethod
+    def get_device_info(self) -> Dict[str, Any]:
+        """Obtener información del dispositivo."""
+        pass
+    
+    @abstractmethod
+    def get_status(self) -> DeviceStatus:
+        """Obtener estado del dispositivo."""
+        pass
+    
+    # === NUEVOS MÉTODOS PARA SOPORTE DE PLANTILLAS ===
+    
+    def apply_template(self, template) -> bool:
         """
-        Lee datos de un dispositivo.
+        Aplicar una plantilla al protocolo.
         
         Args:
-            device_id: Identificador único del dispositivo
-            address: Dirección de inicio de lectura
-            count: Cantidad de datos a leer
+            template: Plantilla a aplicar
+            
+        Returns:
+            bool: True si se aplicó correctamente
+        """
+        try:
+            # Implementación base - puede ser sobreescrita por protocolos específicos
+            if hasattr(template, 'parameters'):
+                self.template_parameters = template.parameters
+                self.template_methods = getattr(template, 'automation_methods', {})
+                self.template_alarms = getattr(template, 'alarms', {})
+                return True
+            return False
+        except Exception as e:
+            # Log error but don't raise to maintain compatibility
+            import logging
+            logging.getLogger(__name__).error(f"Error applying template: {e}")
+            return False
+    
+    def get_template_parameters(self) -> Dict[str, Any]:
+        """
+        Obtener parámetros de la plantilla aplicada.
         
         Returns:
-            List[int]: Lista con los datos leídos. Vacía si hay error.
+            Dict[str, Any]: Parámetros de la plantilla
         """
-        pass
+        return getattr(self, 'template_parameters', {})
     
-    @abstractmethod
-    def write_data(self, device_id: str, address: int, data: List[int]) -> bool:
+    def execute_template_method(self, method_name: str, **kwargs) -> Any:
         """
-        Escribe datos en un dispositivo.
+        Ejecutar un método de la plantilla.
         
         Args:
-            device_id: Identificador único del dispositivo
-            address: Dirección de inicio de escritura
-            data: Lista de datos a escribir
-        
+            method_name: Nombre del método a ejecutar
+            **kwargs: Parámetros del método
+            
         Returns:
-            bool: True si la escritura fue exitosa, False en caso contrario
+            Any: Resultado de la ejecución o None si falla
         """
-        pass
+        try:
+            template_methods = getattr(self, 'template_methods', {})
+            if method_name in template_methods:
+                method_info = template_methods[method_name]
+                script = method_info.get('script', '')
+                
+                # Crear un entorno seguro para ejecutar el script
+                env = {
+                    'self': self,
+                    'kwargs': kwargs,
+                    'write_parameter': self._write_template_parameter,
+                    'read_parameter': self._read_template_parameter
+                }
+                
+                # Ejecutar el script
+                exec(script, env)
+                return env.get('result')
+            else:
+                return None
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).error(f"Error executing template method {method_name}: {e}")
+            return None
     
-    @abstractmethod
-    def get_devices(self) -> List[str]:
+    def _write_template_parameter(self, param_name: str, value: Any) -> bool:
         """
-        Obtiene la lista de dispositivos disponibles para este protocolo.
-        
-        Returns:
-            List[str]: Lista de device_id disponibles
-        """
-        pass
-    
-    @abstractmethod
-    def get_device_info(self, device_id: str) -> Optional[Dict[str, Any]]:
-        """
-        Obtiene información detallada de un dispositivo específico.
+        Método interno para escribir un parámetro de plantilla.
         
         Args:
-            device_id: Identificador del dispositivo
-        
+            param_name: Nombre del parámetro
+            value: Valor a escribir
+            
         Returns:
-            Optional[Dict]: Diccionario con información del dispositivo o None si no existe
+            bool: True si se escribió correctamente
         """
-        pass
+        try:
+            parameters = self.get_template_parameters()
+            if param_name in parameters.get('control', {}):
+                param_info = parameters['control'][param_name]
+                address = param_info.get('address')
+                if address is not None:
+                    return self.write_data(address, [value])
+            return False
+        except Exception:
+            return False
     
-    @abstractmethod
-    def validate_config(self, config: Dict[str, Any]) -> bool:
+    def _read_template_parameter(self, param_name: str) -> Any:
         """
-        Valida si la configuración proporcionada es correcta para este protocolo.
+        Método interno para leer un parámetro de plantilla.
         
         Args:
-            config: Diccionario de configuración a validar
-        
+            param_name: Nombre del parámetro
+            
         Returns:
-            bool: True si la configuración es válida, False en caso contrario
+            Any: Valor leído o None si falla
         """
-        pass
+        try:
+            parameters = self.get_template_parameters()
+            if param_name in parameters.get('control', {}):
+                param_info = parameters['control'][param_name]
+                address = param_info.get('address')
+                count = 1
+                if address is not None:
+                    data = self.read_data(address, count)
+                    return data[0] if data else None
+            return None
+        except Exception:
+            return None
