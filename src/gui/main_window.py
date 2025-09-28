@@ -4,7 +4,7 @@ from PySide6.QtWidgets import (
     QMessageBox, QLabel, QComboBox, QPushButton
 )
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QIcon, QAction  # <-- CAMBIO: Importar QAction desde QtGui
+from PySide6.QtGui import QIcon, QAction
 
 # Importaciones corregidas
 from .modes.novice_mode import NoviceMode
@@ -45,7 +45,7 @@ class MainWindow(QMainWindow):
         
         mode_label = QLabel("Modo de operación:")
         self.mode_combo = QComboBox()
-        self.mode_combo.addItems(["Modo Novato", "Modo Experto"])
+        self.mode_combo.addItems(["Modo Novato", "Modo Experto"])  # Asegurarse de que ambos modos estén aquí
         self.mode_combo.currentTextChanged.connect(self.on_mode_changed)
         
         mode_selector_layout.addWidget(mode_label)
@@ -59,8 +59,9 @@ class MainWindow(QMainWindow):
         self.novice_mode = NoviceMode(self.communication_engine)
         self.expert_mode = ExpertMode(self.communication_engine)
         
-        self.stacked_widget.addWidget(self.novice_mode)
-        self.stacked_widget.addWidget(self.expert_mode)
+        # Añadir ambos modos al stacked widget
+        self.stacked_widget.addWidget(self.novice_mode)  # Índice 0
+        self.stacked_widget.addWidget(self.expert_mode)  # Índice 1
         
         # Layout principal
         main_layout.addLayout(mode_selector_layout)
@@ -74,6 +75,9 @@ class MainWindow(QMainWindow):
         # Establecer modo inicial
         self.stacked_widget.setCurrentWidget(self.novice_mode)
         self.current_mode = "novice"
+        
+        # Asegurarse de que el combo muestre el modo inicial correcto
+        self.mode_combo.setCurrentText("Modo Novato")
         
     def setup_menu(self):
         menubar = self.menuBar()
@@ -136,14 +140,18 @@ class MainWindow(QMainWindow):
         
     def on_mode_changed(self, mode_text):
         """Manejar cambio de modo"""
+        print(f"Cambiando a modo: {mode_text}")  # Debug: mostrar el modo seleccionado
+        
         if "Novato" in mode_text:
             self.stacked_widget.setCurrentWidget(self.novice_mode)
             self.current_mode = "novice"
             self.status_bar.showMessage("Modo Novato activado")
+            print("Modo novato activado")  # Debug
         else:
             self.stacked_widget.setCurrentWidget(self.expert_mode)
             self.current_mode = "expert"
             self.status_bar.showMessage("Modo Experto activado")
+            print("Modo experto activado")  # Debug
             
         self.mode_changed.emit(self.current_mode)
         
