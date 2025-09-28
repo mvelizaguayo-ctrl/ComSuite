@@ -3,7 +3,13 @@ import os
 
 # Agregar el directorio raíz del proyecto al PYTHONPATH
 project_root = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, project_root)
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
+# Agregar el directorio src al PYTHONPATH
+src_path = os.path.join(project_root, 'src')
+if src_path not in sys.path:
+    sys.path.insert(0, src_path)
 
 from PySide6.QtWidgets import QApplication
 from src.core.communication_engine import CommunicationEngine
@@ -16,10 +22,20 @@ def main():
     app.setApplicationVersion("1.0.0")
     
     # Inicializar el motor de comunicaciones
-    comm_engine = CommunicationEngine()
+    try:
+        comm_engine = CommunicationEngine()
+        print("Motor de comunicaciones inicializado correctamente")
+    except Exception as e:
+        print(f"Error inicializando el motor de comunicaciones: {e}")
+        sys.exit(1)
     
     # Crear la ventana principal
-    main_window = MainWindow(comm_engine)
+    try:
+        main_window = MainWindow(comm_engine)
+        print("Ventana principal creada correctamente")
+    except Exception as e:
+        print(f"Error creando la ventana principal: {e}")
+        sys.exit(1)
     
     # Conectar señales del core a la GUI
     comm_engine.protocol_loaded.connect(main_window.on_protocol_loaded)
