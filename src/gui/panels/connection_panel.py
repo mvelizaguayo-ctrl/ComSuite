@@ -1,13 +1,14 @@
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
-    QPushButton, QFrame, QGroupBox, QProgressBar,
-    QTableWidget, QTableWidgetItem, QHeaderView
+    QPushButton, QFrame, QProgressBar, QTableWidget,
+    QTableWidgetItem, QHeaderView, QComboBox, QSpinBox,
+    QLineEdit, QFormLayout, QGroupBox
 )
 from PySide6.QtCore import Signal, Qt, QTimer
 from PySide6.QtGui import QIcon
 
 
-class ConnectionPanel(QWidget):
+class ConnectionPanel(QFrame):
     """Panel de estado de conexiones para modo experto"""
     
     connection_status_changed = Signal(str, bool)  # device_id, connected
@@ -17,6 +18,9 @@ class ConnectionPanel(QWidget):
         self.communication_engine = communication_engine
         self.setup_ui()
         self.setup_connections()
+        
+        # Establecer estilo de frame
+        self.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
         
         # Timer para actualizar estado
         self.update_timer = QTimer()
@@ -37,6 +41,7 @@ class ConnectionPanel(QWidget):
         self.connection_table.horizontalHeader().setStretchLastSection(True)
         self.connection_table.verticalHeader().setVisible(False)
         self.connection_table.setAlternatingRowColors(True)
+        self.connection_table.setMaximumHeight(200)
         
         # Grupo de estadísticas
         stats_group = QGroupBox("Estadísticas de Conexión")
@@ -57,9 +62,6 @@ class ConnectionPanel(QWidget):
         layout.addWidget(title)
         layout.addWidget(self.connection_table)
         layout.addWidget(stats_group)
-        
-        # Frame para borde
-        self.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
         
     def setup_connections(self):
         # Conectar señales del motor de comunicación
@@ -87,7 +89,10 @@ class ConnectionPanel(QWidget):
             # Estado
             status = "Conectado" if device.is_connected() else "Desconectado"
             status_item = QTableWidgetItem(status)
-            status_item.setForeground(Qt.green if device.is_connected() else Qt.red)
+            if device.is_connected():
+                status_item.setForeground(Qt.GlobalColor.green)
+            else:
+                status_item.setForeground(Qt.GlobalColor.red)
             self.connection_table.setItem(i, 2, status_item)
             
             # Acciones
