@@ -1,13 +1,13 @@
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QListWidget, 
     QListWidgetItem, QLabel, QPushButton, QFrame,
-    QMenu, QMessageBox, QInputDialog
+    QMenu, QMessageBox, QInputDialog, QSizePolicy
 )
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QIcon
 
 
-class DevicePanel(QWidget):
+class DevicePanel(QFrame):  # <-- CAMBIAR DE QWidget A QFrame
     """Panel de dispositivos para modo experto"""
     
     device_selected = Signal(str)  # Emite ID del dispositivo seleccionado
@@ -22,11 +22,6 @@ class DevicePanel(QWidget):
     def setup_ui(self):
         layout = QVBoxLayout(self)
         
-        # Crear un frame para el borde
-        frame = QFrame()
-        frame.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
-        frame_layout = QVBoxLayout(frame)
-        
         # Título
         title = QLabel("Dispositivos Configurados")
         title.setStyleSheet("font-weight: bold; font-size: 12px;")
@@ -34,34 +29,42 @@ class DevicePanel(QWidget):
         # Lista de dispositivos
         self.device_list = QListWidget()
         self.device_list.setAlternatingRowColors(True)
+        self.device_list.setMinimumHeight(150)  # Altura mínima
         
         # Botones
         button_layout = QHBoxLayout()
         
         self.add_btn = QPushButton("Agregar")
         self.add_btn.setIcon(QIcon("icons/add.png"))
+        self.add_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         
         self.remove_btn = QPushButton("Eliminar")
         self.remove_btn.setIcon(QIcon("icons/remove.png"))
+        self.remove_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         
         self.connect_btn = QPushButton("Conectar")
         self.connect_btn.setIcon(QIcon("icons/connect.png"))
+        self.connect_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         
         self.disconnect_btn = QPushButton("Desconectar")
         self.disconnect_btn.setIcon(QIcon("icons/disconnect.png"))
+        self.disconnect_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         
         button_layout.addWidget(self.add_btn)
         button_layout.addWidget(self.remove_btn)
         button_layout.addWidget(self.connect_btn)
         button_layout.addWidget(self.disconnect_btn)
         
-        # Agregar widgets al frame
-        frame_layout.addWidget(title)
-        frame_layout.addWidget(self.device_list)
-        frame_layout.addLayout(button_layout)
+        # Agregar widgets al layout
+        layout.addWidget(title)
+        layout.addWidget(self.device_list)
+        layout.addLayout(button_layout)
         
-        # Agregar frame al layout principal
-        layout.addWidget(frame)
+        # Frame para borde - AHORA ES CORRECTO porque heredamos de QFrame
+        self.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
+        
+        # Configurar políticas de tamaño
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         
     def setup_connections(self):
         self.device_list.itemSelectionChanged.connect(self.on_selection_changed)
@@ -159,8 +162,8 @@ class DevicePanel(QWidget):
         self.device_list.addItem(item)
 
 
-class SimpleDevicePanel(QFrame):
-    """Panel simplificado para modo novato - Ahora hereda de QFrame"""
+class SimpleDevicePanel(QFrame):  # <-- CAMBIAR DE QWidget A QFrame
+    """Panel simplificado para modo novato"""
     
     device_selected = Signal(str)  # Emite ID del dispositivo seleccionado
     
@@ -169,9 +172,6 @@ class SimpleDevicePanel(QFrame):
         self.communication_engine = communication_engine
         self.setup_ui()
         self.setup_connections()
-        
-        # Establecer estilo de frame
-        self.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
         
     def setup_ui(self):
         layout = QVBoxLayout(self)
@@ -185,6 +185,7 @@ class SimpleDevicePanel(QFrame):
         self.device_list = QListWidget()
         self.device_list.setAlternatingRowColors(True)
         self.device_list.setMaximumHeight(200)
+        self.device_list.setMinimumHeight(150)  # Altura mínima
         
         # Descripción
         desc = QLabel("Haga clic en un dispositivo para ver sus datos")
@@ -195,6 +196,12 @@ class SimpleDevicePanel(QFrame):
         layout.addWidget(title)
         layout.addWidget(self.device_list)
         layout.addWidget(desc)
+        
+        # Frame para borde - AHORA ES CORRECTO porque heredamos de QFrame
+        self.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
+        
+        # Configurar políticas de tamaño
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         
     def setup_connections(self):
         self.device_list.itemSelectionChanged.connect(self.on_selection_changed)
