@@ -1,12 +1,11 @@
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPushButton, 
     QLabel, QListWidget, QListWidgetItem, QFrame,
-    QMessageBox
+    QMessageBox, QSizePolicy  # <-- MOVER AQUÍ
 )
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QIcon, QFont
 
-# Importaciones corregidas
 from ..wizards.device_wizard import DeviceWizard
 from ..panels.device_panel import SimpleDevicePanel
 from ..panels.data_monitor import SimpleDataMonitor
@@ -26,6 +25,13 @@ class NoviceMode(QWidget):
     def setup_ui(self):
         main_layout = QVBoxLayout(self)
         
+        # Frame para borde
+        self.frame = QFrame()
+        self.frame.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
+        
+        # Layout dentro del frame
+        layout = QVBoxLayout(self.frame)
+        
         # Título descriptivo
         title_label = QLabel("ComSuite - Modo Novato")
         title_font = QFont()
@@ -44,11 +50,14 @@ class NoviceMode(QWidget):
         
         # Panel de dispositivos simplificado
         self.device_panel = SimpleDevicePanel(self.communication_engine)
+        self.device_panel.setMinimumHeight(150)  # Altura mínima
         
         # Botón grande para agregar dispositivos
         self.add_device_btn = QPushButton("Agregar Nuevo Dispositivo")
         self.add_device_btn.setIcon(QIcon("icons/add_device.png"))
         self.add_device_btn.setFixedHeight(60)
+        self.add_device_btn.setMinimumWidth(200)  # Ancho mínimo
+        self.add_device_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         self.add_device_btn.setStyleSheet("""
             QPushButton {
                 background-color: #4CAF50;
@@ -57,6 +66,7 @@ class NoviceMode(QWidget):
                 border-radius: 5px;
                 font-size: 14px;
                 font-weight: bold;
+                padding: 10px;
             }
             QPushButton:hover {
                 background-color: #45a049;
@@ -67,15 +77,21 @@ class NoviceMode(QWidget):
         self.data_monitor = SimpleDataMonitor()
         
         # Agregar widgets al layout
-        main_layout.addWidget(title_label)
-        main_layout.addWidget(desc_label)
-        main_layout.addWidget(self.device_panel)
-        main_layout.addWidget(self.add_device_btn)
-        main_layout.addWidget(self.data_monitor)
+        layout.addWidget(title_label)
+        layout.addWidget(desc_label)
+        layout.addWidget(self.device_panel)
+        layout.addWidget(self.add_device_btn)
+        layout.addWidget(self.data_monitor)
         
-        # Espaciado
-        main_layout.setSpacing(15)
-        main_layout.setContentsMargins(20, 20, 20, 20)
+        # Configurar espaciado
+        layout.setSpacing(20)  # Espacio entre widgets
+        layout.setContentsMargins(25, 25, 25, 25)  # Márgenes del contenedor
+        
+        # Agregar el frame al layout principal
+        main_layout.addWidget(self.frame)
+        
+        # Configurar políticas de tamaño
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         
     def setup_connections(self):
         self.add_device_btn.clicked.connect(self.show_device_wizard)
