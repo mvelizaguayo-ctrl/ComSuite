@@ -6,7 +6,7 @@ from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QIcon, QFont
 
 
-class DeviceWidget(QWidget):
+class DeviceWidget(QFrame):
     """Widget para representar un dispositivo individual"""
     
     connect_clicked = Signal(str)  # device_id
@@ -18,13 +18,11 @@ class DeviceWidget(QWidget):
         self.device_info = device_info
         self.setup_ui()
         
+        # Establecer estilo de frame
+        self.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
+        
     def setup_ui(self):
         layout = QVBoxLayout(self)
-        
-        # Frame principal
-        frame = QFrame()
-        frame.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
-        frame_layout = QVBoxLayout(frame)
         
         # Título del dispositivo
         title = QLabel(self.device_info['device_id'])
@@ -74,15 +72,12 @@ class DeviceWidget(QWidget):
         button_layout.addWidget(self.disconnect_btn)
         button_layout.addWidget(self.configure_btn)
         
-        # Agregar widgets al frame
-        frame_layout.addWidget(title)
-        frame_layout.addWidget(info_group)
-        frame_layout.addWidget(self.status_label)
-        frame_layout.addWidget(self.comm_progress)
-        frame_layout.addLayout(button_layout)
-        
-        # Agregar frame al layout principal
-        layout.addWidget(frame)
+        # Agregar widgets al layout
+        layout.addWidget(title)
+        layout.addWidget(info_group)
+        layout.addWidget(self.status_label)
+        layout.addWidget(self.comm_progress)
+        layout.addLayout(button_layout)
         
         # Establecer tamaño fijo
         self.setFixedSize(250, 300)
