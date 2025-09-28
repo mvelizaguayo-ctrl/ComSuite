@@ -43,14 +43,14 @@ def main():
     comm_engine.device_disconnected.connect(main_window.on_device_disconnected)
     
     # Configurar tamaño inicial y comportamiento de la ventana
-    main_window.resize(1400, 900)  # Tamaño inicial más grande
-    main_window.setMinimumSize(1000, 700)  # Tamaño mínimo para evitar recortes
+    main_window.resize(1400, 900)
+    main_window.setMinimumSize(1000, 700)
     
     # Mostrar ventana
     main_window.show()
     
-    # Ejecutar aplicación
-    sys.exit(app.exec_())
+    # Ejecutar aplicación - CORREGIDO
+    sys.exit(app.exec())  # Cambiado de app.exec_() a app.exec()
 
 
 if __name__ == "__main__":
