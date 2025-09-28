@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QSplitter,
-    QLabel, QFrame
+    QLabel, QFrame, QSizePolicy  # <-- MOVER AQUÍ
 )
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
@@ -55,9 +55,11 @@ class ExpertMode(QWidget):
         # Crear widgets para el splitter
         left_widget = QWidget()
         left_widget.setLayout(left_panel)
+        left_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         
         right_widget = QWidget()
         right_widget.setLayout(right_panel)
+        right_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         
         # Configurar splitter
         splitter = QSplitter(Qt.Horizontal)
@@ -72,6 +74,9 @@ class ExpertMode(QWidget):
         # Configurar márgenes y espaciado
         main_layout.setContentsMargins(10, 10, 10, 10)
         main_layout.setSpacing(10)
+        
+        # Configurar políticas de tamaño
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         
     def setup_connections(self):
         # Conectar señales entre componentes
