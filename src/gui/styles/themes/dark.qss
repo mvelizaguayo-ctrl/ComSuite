@@ -1,88 +1,110 @@
-/* Tema oscuro para la aplicación */
-QWidget {
-    background-color: #2c3e50;
-    color: #ecf0f1;
-}
+/* Tema oscuro - hereda del base.qss y sobrescribe colores */
 
-QMainWindow {
-    background-color: #1a252f;
-}
-
-QMenuBar {
-    background-color: #34495e;
-    color: #ecf0f1;
-    border-bottom: 1px solid #2c3e50;
-}
-
-QMenu {
-    background-color: #34495e;
-    color: #ecf0f1;
-    border: 1px solid #2c3e50;
-}
-
-QMenu::item:selected {
-    background-color: #3498db;
-}
-
-QStatusBar {
-    background-color: #2c3e50;
-    color: #ecf0f1;
-    border-top: 1px solid #34495e;
-}
-
-QPushButton {
-    background-color: #3498db;
-    color: white;
-}
-
-QPushButton:hover {
-    background-color: #2980b9;
-}
-
+/* QGroupBox - Asegurar que el título sea visible */
 QGroupBox {
-    border: 1px solid #34495e;
-    color: #ecf0f1;
+    background-color: #1a1a1a;
+    border: 1px solid #444;
+    color: #e0e0e0;
 }
 
+QGroupBox::title {
+    background-color: #1a1a1a;
+    color: #66BB6A;  /* Verde más suave para el tema oscuro */
+}
+
+/* Fondo general */
+QWidget {
+    background-color: #0d1117;
+}
+
+/* QListWidget */
+QListWidget {
+    background-color: #161b22;
+    border-color: #30363d;
+}
+
+QListWidget::item:selected {
+    background-color: #238636;
+}
+
+/* QTableWidget */
 QTableWidget {
-    background-color: #34495e;
-    color: #ecf0f1;
-    border: 1px solid #34495e;
-    alternate-background-color: #2c3e50;
-}
-
-QTableWidget::item:selected {
-    background-color: #3498db;
+    background-color: #161b22;
+    border-color: #30363d;
+    gridline-color: #30363d;
 }
 
 QHeaderView::section {
-    background-color: #34495e;
-    color: #ecf0f1;
-    border-right: 1px solid #2c3e50;
-    border-bottom: 1px solid #2c3e50;
+    background-color: #21262d;
+    color: #e0e0e0;
+    border-color: #30363d;
 }
 
-QLineEdit, QComboBox, QSpinBox {
-    background-color: #34495e;
-    color: #ecf0f1;
-    border: 1px solid #34495e;
-}
-
-QLineEdit:focus, QComboBox:focus, QSpinBox:focus {
-    border: 1px solid #3498db;
-}
-
-QProgressBar {
-    background-color: #34495e;
-    color: #ecf0f1;
-}
-
-QProgressBar::chunk {
-    background-color: #3498db;
-}
-
+/* QTextEdit */
 QTextEdit {
-    background-color: #34495e;
-    color: #ecf0f1;
-    border: 1px solid #34495e;
+    background-color: #161b22;
+    border-color: #30363d;
+}
+
+/* QComboBox */
+QComboBox {
+    background-color: #161b22;
+    border-color: #30363d;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #161b22;
+    border-color: #30363d;
+    selection-background-color: #238636;
+}
+
+/* QSpinBox */
+QSpinBox {
+    background-color: #161b22;
+    border-color: #30363d;
+}
+
+/* QFrame */
+QFrame {
+    background-color: #1a1a1a;
+    border-color: #30363d;
+}
+
+/* QPushButton */
+QPushButton {
+    background-color: #238636;
+}
+
+QPushButton:hover {
+    background-color: #2ea043;
+}
+
+QPushButton:pressed {
+    background-color: #238636;
+}
+
+/* QMenuBar */
+QMenuBar {
+    background-color: #161b22;
+    border-color: #30363d;
+}
+
+QMenuBar::item:selected {
+    background-color: #238636;
+}
+
+/* QMenu */
+QMenu {
+    background-color: #161b22;
+    border-color: #30363d;
+}
+
+QMenu::item:selected {
+    background-color: #238636;
+}
+
+/* QStatusBar */
+QStatusBar {
+    background-color: #161b22;
+    border-color: #30363d;
 }
