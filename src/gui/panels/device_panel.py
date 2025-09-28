@@ -22,6 +22,11 @@ class DevicePanel(QWidget):
     def setup_ui(self):
         layout = QVBoxLayout(self)
         
+        # Crear un frame para el borde
+        frame = QFrame()
+        frame.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
+        frame_layout = QVBoxLayout(frame)
+        
         # Título
         title = QLabel("Dispositivos Configurados")
         title.setStyleSheet("font-weight: bold; font-size: 12px;")
@@ -50,13 +55,13 @@ class DevicePanel(QWidget):
         button_layout.addWidget(self.connect_btn)
         button_layout.addWidget(self.disconnect_btn)
         
-        # Agregar widgets al layout
-        layout.addWidget(title)
-        layout.addWidget(self.device_list)
-        layout.addLayout(button_layout)
+        # Agregar widgets al frame
+        frame_layout.addWidget(title)
+        frame_layout.addWidget(self.device_list)
+        frame_layout.addLayout(button_layout)
         
-        # Frame para borde
-        self.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
+        # Agregar frame al layout principal
+        layout.addWidget(frame)
         
     def setup_connections(self):
         self.device_list.itemSelectionChanged.connect(self.on_selection_changed)
@@ -154,8 +159,8 @@ class DevicePanel(QWidget):
         self.device_list.addItem(item)
 
 
-class SimpleDevicePanel(QWidget):
-    """Panel simplificado para modo novato"""
+class SimpleDevicePanel(QFrame):
+    """Panel simplificado para modo novato - Ahora hereda de QFrame"""
     
     device_selected = Signal(str)  # Emite ID del dispositivo seleccionado
     
@@ -164,6 +169,9 @@ class SimpleDevicePanel(QWidget):
         self.communication_engine = communication_engine
         self.setup_ui()
         self.setup_connections()
+        
+        # Establecer estilo de frame
+        self.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
         
     def setup_ui(self):
         layout = QVBoxLayout(self)
@@ -187,9 +195,6 @@ class SimpleDevicePanel(QWidget):
         layout.addWidget(title)
         layout.addWidget(self.device_list)
         layout.addWidget(desc)
-        
-        # Frame para borde
-        self.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
         
     def setup_connections(self):
         self.device_list.itemSelectionChanged.connect(self.on_selection_changed)
