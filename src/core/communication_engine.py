@@ -5,10 +5,10 @@ import logging
 from typing import Dict, List, Any, Optional
 from PySide6.QtCore import QObject, Signal
 
-# Importaciones relativas al paquete src
+# Importaciones corregidas
+from .plugin_loader import PluginLoader
 from ..protocols.base_protocol.protocol_interface import ProtocolInterface
 from ..protocols.base_protocol.device_interface import DeviceInterface
-from ..plugins.plugin_loader import PluginLoader
 from ..config.config_manager import ConfigManager
 
 # Configurar logging
