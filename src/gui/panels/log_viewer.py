@@ -4,16 +4,19 @@ from PySide6.QtWidgets import (
     QGroupBox, QCheckBox
 )
 from PySide6.QtCore import Signal, Qt, QDateTime
-from PySide6.QtGui import QTextCursor, QFont
+from PySide6.QtGui import QTextCursor, QFont, QColor
 
 
-class LogViewer(QWidget):
-    """Visor de logs para modo experto"""
+class LogViewer(QFrame):
+    """Visor de logs para modo experto - Ahora hereda de QFrame"""
     
     def __init__(self):
         super().__init__()
         self.current_device_id = None
         self.setup_ui()
+        
+        # Establecer estilo de frame
+        self.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
         
     def setup_ui(self):
         layout = QVBoxLayout(self)
@@ -55,9 +58,6 @@ class LogViewer(QWidget):
         layout.addLayout(controls_layout)
         layout.addWidget(self.log_text)
         
-        # Frame para borde
-        self.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
-        
         # Logs iniciales
         self.add_log("INFO", "Sistema iniciado", "system")
         self.add_log("INFO", "Visor de logs listo", "log_viewer")
@@ -79,14 +79,15 @@ class LogViewer(QWidget):
         log_entry = f"[{timestamp}] [{level}] [{source}] {message}\n"
         
         # Colorear según nivel
-        color = {
-            "INFO": "black",
-            "WARNING": "orange",
-            "ERROR": "red"
-        }.get(level, "black")
+        color_map = {
+            "INFO": Qt.GlobalColor.black,
+            "WARNING": QColor(255, 165, 0),  # Naranja
+            "ERROR": Qt.GlobalColor.red
+        }
+        color = color_map.get(level, Qt.GlobalColor.black)
         
         self.log_text.moveCursor(QTextCursor.End)
-        self.log_text.setTextColor(Qt.GlobalColor(color))
+        self.log_text.setTextColor(color)
         self.log_text.insertPlainText(log_entry)
         
         # Auto-scroll si está habilitado
