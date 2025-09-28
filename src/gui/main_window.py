@@ -1,12 +1,12 @@
 from PySide6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
-    QStackedWidget, QStatusBar, QMenuBar, QMenu, QAction,
+    QStackedWidget, QStatusBar, QMenuBar, QMenu, 
     QMessageBox, QLabel, QComboBox, QPushButton
 )
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QIcon
+from PySide6.QtGui import QIcon, QAction  # <-- CAMBIO: Importar QAction desde QtGui
 
-# Importaciones relativas al paquete src
+# Importaciones corregidas
 from .modes.novice_mode import NoviceMode
 from .modes.expert_mode import ExpertMode
 from .style_manager import StyleManager
