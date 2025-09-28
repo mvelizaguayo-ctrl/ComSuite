@@ -8,7 +8,7 @@ from PySide6.QtGui import QIcon, QFont
 import random
 
 
-class DataMonitor(QWidget):
+class DataMonitor(QFrame):  # Cambiado a QFrame para evitar layouts anidados
     """Monitor de datos para modo experto"""
     
     def __init__(self):
@@ -19,9 +19,10 @@ class DataMonitor(QWidget):
         # Timer para actualizar datos
         self.update_timer = QTimer()
         self.update_timer.timeout.connect(self.update_data)
-        self.update_timer.start(1000)  # Actualizar cada segundo
+        self.update_timer.start(1000)
         
     def setup_ui(self):
+        # Layout principal directamente en el QFrame
         layout = QVBoxLayout(self)
         
         # Título
@@ -44,7 +45,7 @@ class DataMonitor(QWidget):
         self.data_table.horizontalHeader().setStretchLastSection(True)
         self.data_table.verticalHeader().setVisible(False)
         self.data_table.setAlternatingRowColors(True)
-        self.data_table.setMinimumHeight(200)  # Altura mínima
+        self.data_table.setMinimumHeight(200)
         
         # Grupo de opciones
         options_group = QGroupBox("Opciones de Monitoreo")
@@ -66,18 +67,17 @@ class DataMonitor(QWidget):
         
         options_group.setLayout(options_layout)
         
-        # Frame para borde
-        self.frame = QFrame()
-        self.frame.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
-        frame_layout = QVBoxLayout(self.frame)
-        frame_layout.addLayout(layout)
-        
-        # Layout principal
-        main_layout = QVBoxLayout(self)
-        main_layout.addWidget(self.frame)
+        # Agregar widgets al layout principal
+        layout.addWidget(title)
+        layout.addLayout(controls_layout)
+        layout.addWidget(self.data_table)
+        layout.addWidget(options_group)
         
         # Configurar políticas de tamaño
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        
+        # Establecer el estilo del frame
+        self.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
         
     def set_device(self, device_id):
         """Establecer el dispositivo a monitorear"""
@@ -90,7 +90,7 @@ class DataMonitor(QWidget):
         if not self.current_device_id:
             return
             
-        # Simular datos (en implementación real, se obtendrían del dispositivo)
+        # Simular datos
         self.data_table.setRowCount(10)
         
         for i in range(10):
@@ -98,7 +98,7 @@ class DataMonitor(QWidget):
             addr_item = QTableWidgetItem(f"{i:04d}")
             self.data_table.setItem(i, 0, addr_item)
             
-            # Valor (simulado)
+            # Valor
             value = random.randint(1000, 5000)
             value_item = QTableWidgetItem(str(value))
             self.data_table.setItem(i, 1, value_item)
@@ -114,7 +114,7 @@ class DataMonitor(QWidget):
         self.update_timer.setInterval(interval)
 
 
-class SimpleDataMonitor(QWidget):
+class SimpleDataMonitor(QFrame):  # Cambiado a QFrame
     """Monitor de datos simplificado para modo novato"""
     
     def __init__(self):
@@ -125,18 +125,11 @@ class SimpleDataMonitor(QWidget):
         # Timer para actualizar datos
         self.update_timer = QTimer()
         self.update_timer.timeout.connect(self.update_data)
-        self.update_timer.start(2000)  # Actualizar cada 2 segundos
+        self.update_timer.start(2000)
         
     def setup_ui(self):
-        # Layout principal
-        main_layout = QVBoxLayout(self)
-        
-        # Frame para borde
-        self.frame = QFrame()
-        self.frame.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
-        
-        # Layout dentro del frame
-        layout = QVBoxLayout(self.frame)
+        # Layout principal directamente en el QFrame
+        layout = QVBoxLayout(self)
         
         # Título
         title = QLabel("Datos del Dispositivo")
@@ -151,13 +144,11 @@ class SimpleDataMonitor(QWidget):
         # Panel de datos principales
         self.data_panel = QGroupBox("Lecturas Actuales")
         self.data_panel.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
-        self.data_panel.setMinimumHeight(200)  # Altura mínima aumentada
+        self.data_panel.setMinimumHeight(200)
         
         data_layout = QVBoxLayout()
-        
-        # Añadir espaciado interno suficiente
-        data_layout.setSpacing(15)  # Espacio entre elementos
-        data_layout.setContentsMargins(20, 30, 20, 20)  # Márgenes internos aumentados
+        data_layout.setSpacing(15)
+        data_layout.setContentsMargins(20, 30, 20, 20)
         
         self.temp_label = QLabel("Temperatura: --°C")
         self.temp_label.setStyleSheet("font-size: 16px; margin: 8px;")
@@ -177,27 +168,27 @@ class SimpleDataMonitor(QWidget):
         
         self.data_panel.setLayout(data_layout)
         
-        # Estado - VERSIÓN ANTERIOR CON COLOR AZUL
+        # Estado - CON COLOR AZUL
         self.status_label = QLabel("Estado: Esperando dispositivo...")
         self.status_label.setAlignment(Qt.AlignCenter)
         self.status_label.setStyleSheet("font-size: 12px; color: blue; margin-top: 15px;")
         
-        # Agregar widgets al layout con espaciado adecuado
+        # Agregar widgets al layout
         layout.addWidget(title)
         layout.addWidget(self.device_label)
         layout.addWidget(self.data_panel)
         layout.addWidget(self.status_label)
         
-        # Configurar espaciado del layout
-        layout.setSpacing(25)  # Espacio entre widgets aumentado
-        layout.setContentsMargins(30, 30, 30, 30)  # Márgenes del contenedor aumentados
+        # Configurar espaciado
+        layout.setSpacing(25)
+        layout.setContentsMargins(30, 30, 30, 30)
         
-        # Agregar el frame al layout principal
-        main_layout.addWidget(self.frame)
-        
-        # Configurar políticas de tamaño para el widget principal
+        # Configurar políticas de tamaño
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.setMinimumHeight(300)  # Altura mínima para el widget completo
+        self.setMinimumHeight(300)
+        
+        # Establecer el estilo del frame
+        self.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
         
     def set_device(self, device_id):
         """Establecer el dispositivo a monitorear"""
@@ -211,7 +202,7 @@ class SimpleDataMonitor(QWidget):
         if not self.current_device_id:
             return
             
-        # Simular datos (en implementación real, se obtendrían del dispositivo)
+        # Simular datos
         import random
         
         temp = random.uniform(20.0, 80.0)
