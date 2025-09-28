@@ -42,6 +42,10 @@ def main():
     comm_engine.device_connected.connect(main_window.on_device_connected)
     comm_engine.device_disconnected.connect(main_window.on_device_disconnected)
     
+    # Configurar tamaño inicial y comportamiento de la ventana
+    main_window.resize(1400, 900)  # Tamaño inicial más grande
+    main_window.setMinimumSize(1000, 700)  # Tamaño mínimo para evitar recortes
+    
     # Mostrar ventana
     main_window.show()
     
