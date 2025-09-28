@@ -11,17 +11,25 @@ class StyleManager:
         
     def apply_style(self, widget):
         """Aplicar el estilo actual al widget y sus hijos"""
+        # Primero aplicar el estilo base
+        base_file = os.path.join(self.themes_path, "base.qss")
+        base_style = ""
+        
+        if os.path.exists(base_file):
+            with open(base_file, "r", encoding='utf-8') as f:
+                base_style = f.read()
+        
+        # Luego aplicar el tema específico
         theme_file = os.path.join(self.themes_path, "themes", f"{self.current_theme}.qss")
+        theme_style = ""
         
         if os.path.exists(theme_file):
-            with open(theme_file, "r") as f:
-                widget.setStyleSheet(f.read())
-        else:
-            # Si no existe el archivo de tema, aplicar estilo base
-            base_file = os.path.join(self.themes_path, "base.qss")
-            if os.path.exists(base_file):
-                with open(base_file, "r") as f:
-                    widget.setStyleSheet(f.read())
+            with open(theme_file, "r", encoding='utf-8') as f:
+                theme_style = f.read()
+        
+        # Combinar estilos y aplicar
+        combined_style = base_style + "\n" + theme_style
+        widget.setStyleSheet(combined_style)
     
     def toggle_theme(self):
         """Cambiar entre temas claro y oscuro"""
