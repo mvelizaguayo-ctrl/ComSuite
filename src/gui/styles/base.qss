@@ -72,6 +72,7 @@ QListWidget::item {
     padding: 10px;  /* Padding aumentado */
     border-radius: 3px;
     min-height: 20px;  /* Altura mínima de ítem */
+    color: #ffffff;  /* Texto blanco */
 }
 
 QListWidget::item:selected {
@@ -93,6 +94,7 @@ QTableWidget::item {
     padding: 8px;  /* Padding aumentado */
     border-bottom: 1px solid #333;
     min-height: 20px;  /* Altura mínima de celda */
+    color: #ffffff;  /* Texto blanco */
 }
 
 QTableWidget::item:selected {
@@ -115,39 +117,61 @@ QTextEdit {
     border: 1px solid #555;
     border-radius: 3px;
     color: #ffffff;
-    padding: 8px;
+    padding: 5px;
     font-family: 'Courier New', monospace;
     min-height: 100px;  /* Altura mínima */
 }
 
-/* QComboBox */
+/* QComboBox - CORREGIDO */
 QComboBox {
     background-color: #1e1e1e;
     border: 1px solid #555;
     border-radius: 3px;
-    color: #ffffff;
+    color: #ffffff;  /* Texto blanco para que sea visible */
     padding: 5px;
-    min-width: 120px;  /* Ancho mínimo */
-    min-height: 25px;  /* Altura mínima */
+    min-width: 120px;
+    min-height: 25px;
 }
 
 QComboBox::drop-down {
     border: none;
     width: 20px;
+    subcontrol-position: center right;
+    padding-right: 4px;
 }
 
 QComboBox::down-arrow {
-    image: url(icons/down_arrow.png);
-    width: 12px;
-    height: 12px;
+    image: none;  /* Quitamos la imagen y usamos un triángulo CSS */
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #ffffff;  /* Triángulo blanco hacia abajo */
 }
 
 QComboBox QAbstractItemView {
     background-color: #1e1e1e;
     border: 1px solid #555;
     selection-background-color: #4CAF50;
-    selection-color: white;
-    padding: 8px;
+    selection-color: #ffffff;
+    padding: 5px;
+}
+
+QComboBox::item {
+    color: #ffffff;  /* Texto blanco para todos los items */
+    background-color: #1e1e1e;
+    padding: 5px 15px;
+    min-height: 20px;
+}
+
+QComboBox::item:selected {
+    background-color: #4CAF50;
+    color: #ffffff;  /* Texto blanco incluso cuando está seleccionado */
+}
+
+QComboBox::item:hover {
+    background-color: #303030;
+    color: #ffffff;  /* Texto blanco al pasar el cursor */
 }
 
 /* QSpinBox */
@@ -201,6 +225,7 @@ QMenuBar {
 QMenuBar::item {
     background-color: transparent;
     padding: 8px 12px;
+    color: #ffffff;
 }
 
 QMenuBar::item:selected {
@@ -218,6 +243,7 @@ QMenu {
 QMenu::item {
     padding: 8px 25px;
     min-height: 20px;
+    color: #ffffff;
 }
 
 QMenu::item:selected {
