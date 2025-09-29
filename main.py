@@ -1,57 +1,62 @@
 import sys
 import os
-
-# Agregar el directorio raíz del proyecto al PYTHONPATH
-project_root = os.path.dirname(os.path.abspath(__file__))
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
-
-# Agregar el directorio src al PYTHONPATH
-src_path = os.path.join(project_root, 'src')
-if src_path not in sys.path:
-    sys.path.insert(0, src_path)
-
 from PySide6.QtWidgets import QApplication
-from src.core.communication_engine import CommunicationEngine
 from src.gui.main_window import MainWindow
+from src.core.communication_engine import CommunicationEngine
+from src.gui.style_manager import StyleManager
 
 def main():
-    # Crear aplicación
-    app = QApplication(sys.argv)
-    app.setApplicationName("ComSuite Professional Communication Suite")
-    app.setApplicationVersion("1.0.0")
+    """Función principal de la aplicación - CON DIAGNÓSTICO"""
+    print("=== INICIANDO APLICACIÓN ===")
+    print(f"Directorio actual: {os.getcwd()}")
     
-    # Inicializar el motor de comunicaciones
+    # Listar archivos de estilos disponibles
+    styles_dir = "src/gui/styles/themes"
+    print(f"=== ARCHIVOS EN {styles_dir} ===")
+    if os.path.exists(styles_dir):
+        for file in os.listdir(styles_dir):
+            print(f"  - {file}")
+    else:
+        print(f"❌ Directorio no existe: {styles_dir}")
+    
     try:
-        comm_engine = CommunicationEngine()
-        print("Motor de comunicaciones inicializado correctamente")
+        # Crear la aplicación
+        app = QApplication(sys.argv)
+        
+        # Inicializar el motor de comunicaciones
+        communication_engine = CommunicationEngine()
+        print("✅ Motor de comunicaciones inicializado")
+        
+        # Crear la ventana principal
+        main_window = MainWindow(communication_engine)
+        print("✅ Ventana principal creada")
+        
+        # Conectar señales
+        communication_engine.protocol_loaded.connect(main_window.on_protocol_loaded)
+        print("✅ Señales conectadas")
+        
+        # Aplicar estilos con diagnóstico
+        print("=== APLICANDO ESTILOS ===")
+        success = StyleManager.apply_theme(main_window, "dark")
+        
+        if success:
+            print("✅ Estilos aplicados exitosamente")
+            # Depurar estilos del widget principal
+            StyleManager.debug_widget_styles(main_window)
+        else:
+            print("❌ ERROR al aplicar estilos")
+        
+        main_window.show()
+        print("✅ Ventana mostrada")
+        
+        # Ejecutar la aplicación
+        return app.exec()
+        
     except Exception as e:
-        print(f"Error inicializando el motor de comunicaciones: {e}")
-        sys.exit(1)
-    
-    # Crear la ventana principal
-    try:
-        main_window = MainWindow(comm_engine)
-        print("Ventana principal creada correctamente")
-    except Exception as e:
-        print(f"Error creando la ventana principal: {e}")
-        sys.exit(1)
-    
-    # Conectar señales del core a la GUI
-    comm_engine.protocol_loaded.connect(main_window.on_protocol_loaded)
-    comm_engine.device_connected.connect(main_window.on_device_connected)
-    comm_engine.device_disconnected.connect(main_window.on_device_disconnected)
-    
-    # Configurar tamaño inicial y comportamiento de la ventana
-    main_window.resize(1400, 900)
-    main_window.setMinimumSize(1000, 700)
-    
-    # Mostrar ventana
-    main_window.show()
-    
-    # Ejecutar aplicación - CORREGIDO
-    sys.exit(app.exec())  # Cambiado de app.exec_() a app.exec()
-
+        print(f"❌ ERROR CRÍTICO: {e}")
+        import traceback
+        traceback.print_exc()
+        return 1
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

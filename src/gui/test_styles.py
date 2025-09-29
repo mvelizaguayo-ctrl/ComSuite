@@ -34,11 +34,11 @@ def test_styles():
     app = QApplication([])
     
     # Cargar estilos directamente para prueba
-    style_file = QFile("src/gui/styles/base.qss")
-    if style_file.open(QFile.ReadOnly | QFile.Text):
-        stream = QTextStream(style_file)
-        app.setStyleSheet(stream.readAll())
-        style_file.close()
+    # style_file = QFile("src/gui/styles/base.qss")
+    # if style_file.open(QFile.ReadOnly | QFile.Text):
+    #     stream = QTextStream(style_file)
+    #     app.setStyleSheet(stream.readAll())
+    #     style_file.close()
     
     window = StyleTestWindow()
     window.show()

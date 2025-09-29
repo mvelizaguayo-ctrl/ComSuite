@@ -1,47 +1,85 @@
 from PySide6.QtCore import QFile, QTextStream
 from PySide6.QtWidgets import QApplication
 import os
+import sys
 
 class StyleManager:
-    """Gestor de estilos para la aplicación"""
+    """Gestor de estilos para la aplicación - CON DIAGNÓSTICO COMPLETO"""
     
-    def __init__(self):
-        self.current_theme = "dark"
-        self.themes_path = os.path.join(os.path.dirname(__file__), "styles")
+    @staticmethod
+    def get_resource_path(relative_path):
+        """Obtener la ruta absoluta a un recurso, funcionando para dev y en ejecutable"""
+        try:
+            # PyInstaller crea una carpeta temporal y almacena la ruta en _MEIPASS
+            base_path = sys._MEIPASS
+        except Exception:
+            base_path = os.path.abspath(".")
         
-    def apply_style(self, widget):
-        """Aplicar el estilo actual al widget y sus hijos"""
-        # Primero aplicar el estilo base
-        base_file = os.path.join(self.themes_path, "base.qss")
-        base_style = ""
-        
-        if os.path.exists(base_file):
-            with open(base_file, "r", encoding='utf-8') as f:
-                base_style = f.read()
-        
-        # Luego aplicar el tema específico
-        theme_file = os.path.join(self.themes_path, "themes", f"{self.current_theme}.qss")
-        theme_style = ""
-        
-        if os.path.exists(theme_file):
-            with open(theme_file, "r", encoding='utf-8') as f:
-                theme_style = f.read()
-        
-        # Combinar estilos y aplicar
-        combined_style = base_style + "\n" + theme_style
-        
-        # Debug: mostrar los estilos que se están aplicando
-        print("=== ESTILOS CSS APLICADOS ===")
-        print("Base file exists:", os.path.exists(base_file))
-        print("Theme file exists:", os.path.exists(theme_file))
-        print("Combined style length:", len(combined_style))
-        print("==========================")
-        
-        # Aplicar a toda la aplicación
-        QApplication.instance().setStyleSheet(combined_style)
+        return os.path.join(base_path, relative_path)
     
-    def toggle_theme(self):
-        """Cambiar entre temas claro y oscuro"""
-        self.current_theme = "light" if self.current_theme == "dark" else "dark"
-        # Aplicar a toda la aplicación
-        self.apply_style(QApplication.instance())
+    @staticmethod
+    def apply_theme(widget, theme_name="dark"):
+        """Aplicar SOLO el tema especificado, con diagnóstico completo"""
+        print("=== INICIANDO APLICACIÓN DE TEMAS ===")
+        
+        # Construir la ruta al archivo de tema
+        theme_path = os.path.join("src", "gui", "styles", "themes", f"{theme_name}.qss")
+        
+        print(f"1. Ruta del tema: {theme_path}")
+        print(f"2. ¿Existe el archivo? {os.path.exists(theme_path)}")
+        
+        # Verificar si el archivo existe
+        if not os.path.exists(theme_path):
+            print(f"❌ ERROR: El archivo de tema no existe: {theme_path}")
+            return False
+        
+        # Intentar cargar el archivo QSS del tema
+        qss_file = QFile(theme_path)
+        if qss_file.exists():
+            qss_file.open(QFile.ReadOnly | QFile.Text)
+            theme_styles = QTextStream(qss_file).readAll()
+            qss_file.close()
+            
+            print(f"3. Archivo QSS cargado: {len(theme_styles)} caracteres")
+            print(f"4. Primeros 200 caracteres del QSS:")
+            print(theme_styles[:200])
+            
+            # Verificar si contiene estilos oscuros
+            if "background-color: #1e1e1e" in theme_styles or "background-color: #2d2d2d" in theme_styles:
+                print("✅ Se detectaron estilos oscuros en el QSS")
+            else:
+                print("❌ NO se detectaron estilos oscuros en el QSS")
+                print("❌ El archivo QSS puede contener estilos para tema claro")
+            
+            # Aplicar SOLO los estilos del tema (sin base.qss)
+            widget.setStyleSheet(theme_styles)
+            
+            print("5. Estilos aplicados al widget")
+            print("=== APLICACIÓN DE TEMAS COMPLETADA ===")
+            return True
+        else:
+            print(f"❌ ERROR: No se pudo abrir el archivo QSS: {theme_path}")
+            return False
+    
+    @staticmethod
+    def get_current_theme_path(theme_name="dark"):
+        """Obtener la ruta al archivo de tema actual"""
+        return os.path.join("src", "gui", "styles", "themes", f"{theme_name}.qss")
+    
+    @staticmethod
+    def debug_widget_styles(widget):
+        """Método de depuración para ver estilos aplicados a un widget"""
+        print("=== DEPURACIÓN DE ESTILOS DEL WIDGET ===")
+        print(f"Clase del widget: {widget.__class__.__name__}")
+        print(f"Estilos aplicados: {widget.styleSheet()[:200] if widget.styleSheet() else 'SIN ESTILOS'}")
+        
+        # Verificar estilos específicos
+        style = widget.styleSheet()
+        if style:
+            if "background-color: #1e1e1e" in style:
+                print("✅ Widget tiene fondo oscuro")
+            else:
+                print("❌ Widget NO tiene fondo oscuro")
+            
+            if "background-color: #f0f0f0" in style or "background: #ffffff" in style:
+                print("❌ Widget tiene estilos de tema CLARO")

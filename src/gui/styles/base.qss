@@ -140,14 +140,14 @@ QComboBox::drop-down {
     padding-right: 4px;
 }
 
-QComboBox::down-arrow {
-    image: none;  /* Quitamos la imagen y usamos un triángulo CSS */
+/* QComboBox::down-arrow {
+    image: none;  // Quitamos la imagen y usamos un triángulo CSS
     width: 0;
     height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 5px solid #ffffff;  /* Triángulo blanco hacia abajo */
-}
+    border-top: 5px solid #ffffff;  // Triángulo blanco hacia abajo
+} */
 
 QComboBox QAbstractItemView {
     background-color: #1e1e1e;
