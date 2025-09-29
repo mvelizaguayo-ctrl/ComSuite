@@ -29,7 +29,16 @@ class StyleManager:
         
         # Combinar estilos y aplicar
         combined_style = base_style + "\n" + theme_style
-        widget.setStyleSheet(combined_style)
+        
+        # Debug: mostrar los estilos que se están aplicando
+        print("=== ESTILOS CSS APLICADOS ===")
+        print("Base file exists:", os.path.exists(base_file))
+        print("Theme file exists:", os.path.exists(theme_file))
+        print("Combined style length:", len(combined_style))
+        print("==========================")
+        
+        # Aplicar a toda la aplicación
+        QApplication.instance().setStyleSheet(combined_style)
     
     def toggle_theme(self):
         """Cambiar entre temas claro y oscuro"""
