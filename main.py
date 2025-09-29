@@ -1,59 +1,45 @@
 import sys
-import os
 from PySide6.QtWidgets import QApplication
 from src.gui.main_window import MainWindow
 from src.core.communication_engine import CommunicationEngine
 from src.gui.style_manager import StyleManager
 
 def main():
-    """Función principal de la aplicación - CON DIAGNÓSTICO"""
-    print("=== INICIANDO APLICACIÓN ===")
-    print(f"Directorio actual: {os.getcwd()}")
+    """Función principal de la aplicación"""
+    # Crear la aplicación
+    app = QApplication(sys.argv)
     
-    # Listar archivos de estilos disponibles
-    styles_dir = "src/gui/styles/themes"
-    print(f"=== ARCHIVOS EN {styles_dir} ===")
-    if os.path.exists(styles_dir):
-        for file in os.listdir(styles_dir):
-            print(f"  - {file}")
-    else:
-        print(f"❌ Directorio no existe: {styles_dir}")
+    # Establecer información de la aplicación
+    app.setApplicationName("ComSuite Professional Suite")
+    app.setApplicationVersion("1.0.0")
+    app.setOrganizationName("ComSuite")
     
     try:
-        # Crear la aplicación
-        app = QApplication(sys.argv)
-        
         # Inicializar el motor de comunicaciones
         communication_engine = CommunicationEngine()
-        print("✅ Motor de comunicaciones inicializado")
+        print("Motor de comunicaciones inicializado correctamente")
         
         # Crear la ventana principal
-        main_window = MainWindow(communication_engine)
-        print("✅ Ventana principal creada")
+        window = MainWindow(communication_engine)
+        print("Ventana principal creada correctamente")
         
-        # Conectar señales
-        communication_engine.protocol_loaded.connect(main_window.on_protocol_loaded)
-        print("✅ Señales conectadas")
+        # Conectar señales del motor de comunicaciones con la ventana principal
+        communication_engine.protocol_loaded.connect(window.on_protocol_loaded)
+        print("Señales conectadas correctamente")
         
-        # Aplicar estilos con diagnóstico
-        print("=== APLICANDO ESTILOS ===")
-        success = StyleManager.apply_theme(main_window, "dark")
+        # Aplicar estilos - ANTES de mostrar la ventana
+        StyleManager.apply_theme(window, "dark")
+        print("Estilos aplicados correctamente")
         
-        if success:
-            print("✅ Estilos aplicados exitosamente")
-            # Depurar estilos del widget principal
-            StyleManager.debug_widget_styles(main_window)
-        else:
-            print("❌ ERROR al aplicar estilos")
-        
-        main_window.show()
-        print("✅ Ventana mostrada")
+        # Mostrar la ventana - DESPUÉS de aplicar estilos
+        window.show()
+        print("Ventana mostrada correctamente")
         
         # Ejecutar la aplicación
         return app.exec()
         
     except Exception as e:
-        print(f"❌ ERROR CRÍTICO: {e}")
+        print(f"Error: {e}")
         import traceback
         traceback.print_exc()
         return 1
