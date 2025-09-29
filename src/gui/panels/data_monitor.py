@@ -8,7 +8,7 @@ from PySide6.QtGui import QIcon, QFont
 import random
 
 
-class DataMonitor(QFrame):  # Cambiado a QFrame para evitar layouts anidados
+class DataMonitor(QFrame):
     """Monitor de datos para modo experto"""
     
     def __init__(self):
@@ -22,7 +22,6 @@ class DataMonitor(QFrame):  # Cambiado a QFrame para evitar layouts anidados
         self.update_timer.start(1000)
         
     def setup_ui(self):
-        # Layout principal directamente en el QFrame
         layout = QVBoxLayout(self)
         
         # Título
@@ -114,7 +113,7 @@ class DataMonitor(QFrame):  # Cambiado a QFrame para evitar layouts anidados
         self.update_timer.setInterval(interval)
 
 
-class SimpleDataMonitor(QFrame):  # Cambiado a QFrame
+class SimpleDataMonitor(QFrame):
     """Monitor de datos simplificado para modo novato"""
     
     def __init__(self):
@@ -128,7 +127,6 @@ class SimpleDataMonitor(QFrame):  # Cambiado a QFrame
         self.update_timer.start(2000)
         
     def setup_ui(self):
-        # Layout principal directamente en el QFrame
         layout = QVBoxLayout(self)
         
         # Título
@@ -168,7 +166,7 @@ class SimpleDataMonitor(QFrame):  # Cambiado a QFrame
         
         self.data_panel.setLayout(data_layout)
         
-        # Estado - CON COLOR AZUL
+        # Estado
         self.status_label = QLabel("Estado: Esperando dispositivo...")
         self.status_label.setAlignment(Qt.AlignCenter)
         self.status_label.setStyleSheet("font-size: 12px; color: blue; margin-top: 15px;")
