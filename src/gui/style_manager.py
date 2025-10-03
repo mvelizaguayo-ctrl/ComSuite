@@ -83,3 +83,15 @@ class StyleManager:
             
             if "background-color: #f0f0f0" in style or "background: #ffffff" in style:
                 print("❌ Widget tiene estilos de tema CLARO")
+
+    # Backwards-compatible aliases used elsewhere in the codebase
+    @staticmethod
+    def apply_style(widget, theme_name="dark"):
+        """Alias histórico que aplicaba un estilo completo. Ahora delega en apply_theme."""
+        return StyleManager.apply_theme(widget, theme_name)
+
+    @staticmethod
+    def toggle_theme():
+        """Método simple para alternar entre temas (placeholder)."""
+        # Este método es un stub: en el futuro puede leer/guardar preferencia
+        print("StyleManager.toggle_theme llamado (placeholder)")

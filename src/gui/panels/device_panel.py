@@ -4,6 +4,8 @@ from PySide6.QtWidgets import (
     QMenu, QMessageBox, QInputDialog, QSizePolicy
 )
 from PySide6.QtCore import Signal, Qt
+import threading
+import time
 from PySide6.QtGui import QIcon
 
 
@@ -45,7 +47,11 @@ class DevicePanel(QFrame):  # <-- CAMBIAR DE QWidget A QFrame
         self.connect_btn = QPushButton("Conectar")
         self.connect_btn.setIcon(QIcon("icons/connect.png"))
         self.connect_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
-        
+
+        self.retry_btn = QPushButton("Reintentar")
+        self.retry_btn.setIcon(QIcon("icons/retry.png"))
+        self.retry_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+
         self.disconnect_btn = QPushButton("Desconectar")
         self.disconnect_btn.setIcon(QIcon("icons/disconnect.png"))
         self.disconnect_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
@@ -54,6 +60,7 @@ class DevicePanel(QFrame):  # <-- CAMBIAR DE QWidget A QFrame
         button_layout.addWidget(self.remove_btn)
         button_layout.addWidget(self.connect_btn)
         button_layout.addWidget(self.disconnect_btn)
+        button_layout.addWidget(self.retry_btn)
         
         # Agregar widgets al layout
         layout.addWidget(title)
@@ -74,6 +81,7 @@ class DevicePanel(QFrame):  # <-- CAMBIAR DE QWidget A QFrame
         self.remove_btn.clicked.connect(self.remove_device)
         self.connect_btn.clicked.connect(self.connect_device)
         self.disconnect_btn.clicked.connect(self.disconnect_device)
+        self.retry_btn.clicked.connect(self.retry_connection)
         
         # Conectar señales del motor de comunicación
         self.communication_engine.device_connected.connect(self.on_device_connected)
@@ -83,6 +91,21 @@ class DevicePanel(QFrame):  # <-- CAMBIAR DE QWidget A QFrame
         """Agregar nuevo dispositivo usando el wizard completo"""
         from ..wizards.device_wizard import DeviceWizard
         wizard = DeviceWizard(self.communication_engine, simplified=False)
+        # Conectar señal para manejar creación y añadir al UI
+        def on_created(device_info):
+            try:
+                dm = self.communication_engine.device_manager
+                device = dm.create_device_from_template(device_info)
+                if device is None:
+                    # Fallback: añadir info mínima desde el wizard
+                    self.add_device_item(device_info)
+                else:
+                    ui_info = {'device_id': device.device_id, 'protocol': getattr(device, 'protocol_name', 'Desconocido')}
+                    self.add_device_item(ui_info)
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"Error creando dispositivo: {e}")
+
+        wizard.device_created.connect(on_created)
         wizard.exec_()
         
     def remove_device(self):
@@ -116,6 +139,40 @@ class DevicePanel(QFrame):  # <-- CAMBIAR DE QWidget A QFrame
         if current_item:
             device_id = current_item.data(Qt.UserRole)
             self.communication_engine.device_manager.disconnect_device(device_id)
+
+    def retry_connection(self):
+        """Iniciar reintento de conexión para el dispositivo seleccionado (hilo)."""
+        current_item = self.device_list.currentItem()
+        if not current_item:
+            QMessageBox.information(self, "Reintentar Conexión", "Seleccione un dispositivo primero.")
+            return
+
+        device_id = current_item.data(Qt.UserRole)
+        # Lanzar hilo para no bloquear la UI
+        t = threading.Thread(target=self._reconnect_worker, args=(device_id,), daemon=True)
+        t.start()
+
+    def _reconnect_worker(self, device_id: str, attempts: int = 3, delay: float = 1.0):
+        """Worker que intenta reconectar varias veces y emite señales al CommunicationEngine."""
+        for i in range(attempts):
+            try:
+                ok = self.communication_engine.device_manager.connect_device(device_id)
+                if ok:
+                    # Emitir señal en el engine para que UI se actualice
+                    try:
+                        self.communication_engine.device_connected.emit(device_id)
+                    except Exception:
+                        pass
+                    return
+            except Exception:
+                pass
+            time.sleep(delay)
+
+        # Si llegamos aquí, todos los intentos fallaron
+        try:
+            self.communication_engine.device_disconnected.emit(device_id)
+        except Exception:
+            pass
             
     def on_selection_changed(self):
         """Manejar cambio de selección"""
@@ -243,3 +300,11 @@ class SimpleDevicePanel(QFrame):  # <-- CAMBIAR DE QWidget A QFrame
         item.setIcon(QIcon("icons/device_disconnected.png"))
         
         self.device_list.addItem(item)
+        
+    # Reintento también disponible en panel simplificado
+    def retry_selected_device(self):
+        current_item = self.device_list.currentItem()
+        if current_item:
+            device_id = current_item.data(Qt.UserRole)
+            t = threading.Thread(target=self._reconnect_worker, args=(device_id,), daemon=True)
+            t.start()

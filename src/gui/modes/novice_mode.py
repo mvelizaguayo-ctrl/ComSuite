@@ -7,6 +7,7 @@ from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QIcon, QFont
 
 from ..wizards.device_wizard import DeviceWizard
+from ..wizards.other_registers_wizard import OtherRegistersWizard
 from ..panels.device_panel import SimpleDevicePanel
 from ..panels.data_monitor import SimpleDataMonitor
 
@@ -75,12 +76,17 @@ class NoviceMode(QWidget):
         
         # Monitor de datos simplificado
         self.data_monitor = SimpleDataMonitor()
-        
+
+        # Botón para "Otros" registros
+        self.other_btn = QPushButton("Otros")
+        self.other_btn.setFixedHeight(40)
+
         # Agregar widgets al layout
         layout.addWidget(title_label)
         layout.addWidget(desc_label)
         layout.addWidget(self.device_panel)
         layout.addWidget(self.add_device_btn)
+        layout.addWidget(self.other_btn)
         layout.addWidget(self.data_monitor)
         
         # Configurar espaciado
@@ -95,24 +101,131 @@ class NoviceMode(QWidget):
         
     def setup_connections(self):
         self.add_device_btn.clicked.connect(self.show_device_wizard)
+        self.other_btn.clicked.connect(self.show_other_wizard)
         self.device_panel.device_selected.connect(self.on_device_selected)
         
     def show_device_wizard(self):
         """Mostrar asistente simplificado para agregar dispositivos"""
-        wizard = DeviceWizard(self.communication_engine, simplified=True)
+        # Abrir el asistente completo (mismo comportamiento que modo experto)
+        wizard = DeviceWizard(self.communication_engine, simplified=False)
         wizard.device_created.connect(self.on_device_created)
         wizard.exec_()
         
     def on_device_created(self, device_info):
         """Manejar creación de nuevo dispositivo"""
-        self.device_panel.add_device(device_info)
-        self.device_added.emit(device_info['device_id'])
-        QMessageBox.information(
-            self, 
-            "Dispositivo Agregado", 
-            f"El dispositivo {device_info['device_id']} ha sido agregado correctamente."
-        )
+        # Crear el dispositivo en el DeviceManager central
+        try:
+            dm = self.communication_engine.device_manager
+            device = dm.create_device_from_template(device_info)
+
+            if device is None:
+                # Intentar crear UI igual con la info del wizard si falla la creación
+                self.device_panel.add_device(device_info)
+                QMessageBox.warning(self, "Atención", "El dispositivo fue agregado a la lista, pero no se pudo crear en el gestor (ver logs).")
+                return
+
+            # Añadir al panel la representación mínima requerida
+            ui_info = {'device_id': device.device_id, 'protocol': getattr(device, 'protocol_name', 'Desconocido')}
+            self.device_panel.add_device(ui_info)
+            self.device_added.emit(device.device_id)
+            # Intentar conectar automáticamente el dispositivo recién creado
+            try:
+                connected = self.communication_engine.device_manager.connect_device(device.device_id)
+                if connected:
+                    # Emitir señal para actualizar UI
+                    self.communication_engine.device_connected.emit(device.device_id)
+                else:
+                    self.communication_engine.device_disconnected.emit(device.device_id)
+            except Exception:
+                pass
+
+            QMessageBox.information(self, "Dispositivo Agregado", f"El dispositivo {device.device_id} ha sido agregado correctamente.")
+
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"No se pudo agregar el dispositivo: {e}")
+            raise
         
     def on_device_selected(self, device_id):
         """Manejar selección de dispositivo"""
+        # Si el device existe en el DeviceManager, pasar el objeto junto al id
+        try:
+            dm = self.communication_engine.device_manager
+            device_obj = dm.get_device(device_id)
+            if device_obj is not None:
+                # Pasamos una tupla (id, objeto) para que el monitor muestre registros
+                self.data_monitor.set_device((device_id, device_obj))
+                return
+        except Exception:
+            pass
+
+        # Fallback: pasar solo el id
         self.data_monitor.set_device(device_id)
+
+    def show_other_wizard(self):
+        wiz = OtherRegistersWizard(self)
+        wiz.registers_created.connect(self._on_registers_created)
+        wiz.exec_()
+
+    def _on_registers_created(self, regs, cfg):
+        # Añadir cada registro como un ítem en el panel simplificado
+            # Persistir cada registro como un dispositivo/entrada en el DeviceManager
+            dm = None
+            try:
+                dm = self.communication_engine.device_manager
+            except Exception:
+                dm = None
+
+            # Crear un único dispositivo que agrupe todos los registros
+            device_name = cfg.get('device_name') or f"regs_{len(dm.get_all_devices())+1 if dm else '1'}"
+            device_id = device_name
+
+            template = {
+                'device_type': 'register_group',
+                'device_id': device_id,
+                'protocol': cfg.get('protocol', 'Modbus TCP'),
+                'config': {
+                    'ip': cfg.get('ip'),
+                    'port': cfg.get('port'),
+                    'com_port': cfg.get('com_port'),
+                    'baudrate': cfg.get('baudrate')
+                },
+                # Lista de registros
+                'registers': regs
+            }
+
+            created = None
+            try:
+                if dm is not None:
+                    created = dm.create_device_from_template(template)
+            except Exception:
+                created = None
+
+            if created is None:
+                # Fallback: añadir cada registro como UI básico
+                for r in regs:
+                    ui_info = {'device_id': f"reg_{r['function']}_{r['address']}", 'protocol': cfg.get('protocol')}
+                    self.device_panel.add_device(ui_info)
+            else:
+                # Guardar la lista de registros en el objeto creado
+                try:
+                    if not hasattr(created, 'registers'):
+                        created.registers = []
+                    # regs ya es una lista de dicts
+                    created.registers.extend(regs)
+                except Exception:
+                    pass
+
+                # Añadir al panel
+                try:
+                    self.add_device_to_panel(created)
+                except Exception:
+                    ui_info = {'device_id': device_id, 'protocol': cfg.get('protocol')}
+                    self.device_panel.add_device(ui_info)
+
+    def add_device_to_panel(self, device):
+        """Compatibilidad: recibir un DeviceInterface y añadirlo al panel UI."""
+        try:
+            ui_info = {'device_id': device.device_id, 'protocol': getattr(device, 'protocol_name', 'Desconocido')}
+            self.device_panel.add_device(ui_info)
+        except Exception:
+            pass

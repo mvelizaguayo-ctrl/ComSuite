@@ -1,8 +1,17 @@
 import sys
 from PySide6.QtWidgets import QApplication
-from src.gui.main_window import MainWindow
-from src.core.communication_engine import CommunicationEngine
-from src.gui.style_manager import StyleManager
+
+# Prefer executing as package (python -m src). Try to import package entry points
+try:
+    from src.gui.main_window import MainWindow
+    from src.core.communication_engine import CommunicationEngine
+    from src.gui.style_manager import StyleManager
+except Exception:
+    # Fallback: if run as script from project root, try relative imports
+    from src.gui.main_window import MainWindow
+    from src.core.communication_engine import CommunicationEngine
+    from src.gui.style_manager import StyleManager
+
 
 def main():
     """Función principal de la aplicación"""
@@ -45,4 +54,5 @@ def main():
         return 1
 
 if __name__ == "__main__":
+    print("Nota: es preferible ejecutar la aplicación como paquete: python -m src")
     sys.exit(main())

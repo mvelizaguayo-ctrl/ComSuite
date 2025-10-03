@@ -173,6 +173,13 @@ class ModbusProtocol(ProtocolInterface):
     def is_connected(self) -> bool:
         """Verifica si el protocolo está conectado"""
         return self._connected
+
+    def get_status(self):
+        """Obtener el estado del protocolo como DeviceStatus"""
+        try:
+            return DeviceStatus.CONNECTED if self._connected else DeviceStatus.DISCONNECTED
+        except Exception:
+            return DeviceStatus.UNKNOWN
     
     def read_data(self, device_id: str, address: int, count: int) -> List[int]:
         """

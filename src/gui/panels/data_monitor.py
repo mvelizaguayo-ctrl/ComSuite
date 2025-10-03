@@ -119,6 +119,7 @@ class SimpleDataMonitor(QFrame):
     def __init__(self):
         super().__init__()
         self.current_device_id = None
+        self._current_device_obj = None
         self.setup_ui()
         
         # Timer para actualizar datos
@@ -166,6 +167,14 @@ class SimpleDataMonitor(QFrame):
         
         self.data_panel.setLayout(data_layout)
         
+        # Lista de registros (para dispositivos que tengan registros asociados)
+        self.registers_list = QTableWidget()
+        self.registers_list.setColumnCount(2)
+        self.registers_list.setHorizontalHeaderLabels(["Función", "Dirección"])
+        self.registers_list.horizontalHeader().setStretchLastSection(True)
+        self.registers_list.verticalHeader().setVisible(False)
+        self.registers_list.setMinimumHeight(120)
+        
         # Estado
         self.status_label = QLabel("Estado: Esperando dispositivo...")
         self.status_label.setAlignment(Qt.AlignCenter)
@@ -175,6 +184,7 @@ class SimpleDataMonitor(QFrame):
         layout.addWidget(title)
         layout.addWidget(self.device_label)
         layout.addWidget(self.data_panel)
+        layout.addWidget(self.registers_list)
         layout.addWidget(self.status_label)
         
         # Configurar espaciado
@@ -188,10 +198,18 @@ class SimpleDataMonitor(QFrame):
         # Establecer el estilo del frame
         self.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
         
-    def set_device(self, device_id):
-        """Establecer el dispositivo a monitorear"""
-        self.current_device_id = device_id
-        self.device_label.setText(f"Monitoreando: {device_id}")
+    def set_device(self, device_id_or_tuple):
+        """Establecer el dispositivo a monitorear.
+
+        Acepta un device_id (str) o una tupla (device_id, device_obj).
+        """
+        if isinstance(device_id_or_tuple, tuple) and len(device_id_or_tuple) == 2:
+            self.current_device_id, self._current_device_obj = device_id_or_tuple
+        else:
+            self.current_device_id = device_id_or_tuple
+            self._current_device_obj = None
+
+        self.device_label.setText(f"Monitoreando: {self.current_device_id}")
         self.status_label.setText("Estado: Monitoreando...")
         self.update_data()
         
@@ -200,18 +218,40 @@ class SimpleDataMonitor(QFrame):
         if not self.current_device_id:
             return
             
-        # Simular datos
-        import random
-        
+        # Si hay un objeto device asociado, mostrar sus registros
+        if self._current_device_obj is not None:
+            device = self._current_device_obj
+            regs = getattr(device, 'registers', []) or []
+            # Rellenar tabla de registros
+            self.registers_list.setRowCount(len(regs))
+            for i, reg in enumerate(regs):
+                func_item = QTableWidgetItem(str(reg.get('function', '')))
+                addr_item = QTableWidgetItem(str(reg.get('address', '')))
+                self.registers_list.setItem(i, 0, func_item)
+                self.registers_list.setItem(i, 1, addr_item)
+
+            # Mostrar valores simulados en las etiquetas principales
+            temp = random.uniform(20.0, 80.0)
+            pressure = random.uniform(10.0, 100.0)
+            flow = random.uniform(0.0, 50.0)
+            self.temp_label.setText(f"Temperatura: {temp:.1f}°C")
+            self.pressure_label.setText(f"Presión: {pressure:.1f} PSI")
+            self.flow_label.setText(f"Flujo: {flow:.1f} L/min")
+            status = "OK" if temp < 70 else "ALTA TEMPERATURA"
+            self.status_label.setText(f"Estado: {status}")
+            self.status_label.setStyleSheet(
+                "font-size: 12px; color: green; margin-top: 15px;" if status == "OK" else "font-size: 12px; color: red; margin-top: 15px;"
+            )
+            return
+
+        # Comportamiento por defecto si no hay objeto device: limpiar registros y mostrar simulación
+        self.registers_list.setRowCount(0)
         temp = random.uniform(20.0, 80.0)
         pressure = random.uniform(10.0, 100.0)
         flow = random.uniform(0.0, 50.0)
-        
         self.temp_label.setText(f"Temperatura: {temp:.1f}°C")
         self.pressure_label.setText(f"Presión: {pressure:.1f} PSI")
         self.flow_label.setText(f"Flujo: {flow:.1f} L/min")
-        
-        # Actualizar estado
         status = "OK" if temp < 70 else "ALTA TEMPERATURA"
         self.status_label.setText(f"Estado: {status}")
         self.status_label.setStyleSheet(

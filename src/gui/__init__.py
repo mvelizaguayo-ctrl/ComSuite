@@ -1,5 +1,4 @@
 from .main_window import MainWindow
-from .modes.novice_mode import NoviceMode
 from .modes.expert_mode import ExpertMode
 from .wizards.device_wizard import DeviceWizard
 from .wizards.connection_wizard import ConnectionWizard

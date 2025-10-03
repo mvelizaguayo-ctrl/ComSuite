@@ -196,6 +196,54 @@ class ModbusDevice(DeviceInterface):
             bool: True si está disponible
         """
         return self._status == DeviceStatus.CONNECTED
+
+    # Compatibilidad: algunos paneles y código esperan is_connected()
+    def is_connected(self) -> bool:
+        return self.is_available()
+
+    def connect(self) -> bool:
+        """Intentar conectar el dispositivo usando la instancia master/slave asociada.
+
+        Devuelve True si la conexión fue exitosa.
+        """
+        try:
+            if self._master_instance and hasattr(self._master_instance, 'connect'):
+                ok = self._master_instance.connect()
+                if ok:
+                    self._status = DeviceStatus.CONNECTED
+                return ok
+
+            if self._slave_instance and hasattr(self._slave_instance, 'start'):
+                ok = self._slave_instance.start()
+                if ok:
+                    self._status = DeviceStatus.CONNECTED
+                return ok
+
+            # Si no hay instancias vinculadas, no se puede conectar
+            self._last_error = "No hay instancia master/slave para conectar"
+            return False
+        except Exception as e:
+            self._last_error = str(e)
+            return False
+
+    def disconnect(self) -> bool:
+        """Intentar desconectar el dispositivo."""
+        try:
+            if self._master_instance and hasattr(self._master_instance, 'disconnect'):
+                self._master_instance.disconnect()
+                self._status = DeviceStatus.DISCONNECTED
+                return True
+
+            if self._slave_instance and hasattr(self._slave_instance, 'stop'):
+                self._slave_instance.stop()
+                self._status = DeviceStatus.DISCONNECTED
+                return True
+
+            self._last_error = "No hay instancia master/slave para desconectar"
+            return False
+        except Exception as e:
+            self._last_error = str(e)
+            return False
     
     def get_config(self) -> Dict[str, Any]:
         """

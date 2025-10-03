@@ -1,0 +1,301 @@
+Fabricante,Modelo,Dirección Modbus,Nombre,Acceso,Unidad,Factor Escala,Rango,Descripción,Categoría
+Yaskawa,GA800,40001,Speed Reference,R/W,Hz,0.01,0–400,Frecuencia de consigna (Hz × 100),Control
+Yaskawa,GA800,40002,Control Word,W,,1,"Bit 0: ON/OFF
+Bit 1: Run Enable
+Bit 2: Reverse
+Bit 3: Fault Reset
+Bit 7: Jog",Palabra de comandos de control,Control
+Yaskawa,GA800,30001,Output Frequency,R,Hz,0.01,0–400,Frecuencia real de salida,Monitoreo
+Yaskawa,GA800,30002,Output Current,R,A,0.1,0–2000,Corriente de salida (0.1 A),Monitoreo
+Yaskawa,GA800,30003,Output Voltage,R,V,1,0–690,Tensión de salida,Monitoreo
+Yaskawa,GA800,30004,DC Bus Voltage,R,V,1,0–1000,Tensión del bus DC,Monitoreo
+Yaskawa,GA800,30005,Estimated Torque,R,%,0.1,-200–200,Par estimado (% del nominal),Monitoreo
+Yaskawa,GA800,30006,Drive Status,R,,1,"Bit 0: Ready
+Bit 1: Running
+Bit 2: At Speed
+Bit 3: Fault
+Bit 4: Undervoltage
+Bit 5: Overvoltage
+Bit 6: Overcurrent
+Bit 7: Overheat
+Bit 9: Comms Error",Estado,Monitoreo
+Yaskawa,GA800,30007,Last Alarm Code,R,,1,0–65535,Código de la última alarma,Diagnóstico
+Yaskawa,GA800,30008,Heat Sink Temperature,R,°C,1,-40–150,Temperatura del disipador,Monitoreo
+Yaskawa,GA800,30009,Output Power,R,kW,0.1,0–9999.9,Potencia de salida,Monitoreo
+Yaskawa,GA800,30010,Energy Consumption,R,kWh,1,0–4294967295,Energía total acumulada,Monitoreo
+Yaskawa,GA800,40003,Acceleration Time 1,R/W,s,0.1,0.1–3600,Tiempo de aceleración 1,Configuración
+Yaskawa,GA800,40004,Deceleration Time 1,R/W,s,0.1,0.1–3600,Tiempo de desaceleración 1,Configuración
+Yaskawa,GA800,40005,Max Frequency,R/W,Hz,0.01,0–400,Frecuencia máxima,Configuración
+Yaskawa,GA800,40006,Min Frequency,R/W,Hz,0.01,0–400,Frecuencia mínima,Configuración
+Yaskawa,GA800,40007,Motor Rated Current,R/W,A,0.1,0.1–2000,Corriente nominal del motor,Configuración
+Yaskawa,GA800,40008,Motor Rated Voltage,R/W,V,1,0–690,Tensión nominal del motor,Configuración
+Yaskawa,GA800,40009,Motor Rated Power,R/W,kW,0.1,0.1–9999.9,Potencia nominal del motor,Configuración
+Yaskawa,GA800,40010,Motor Rated Speed,R/W,rpm,1,0–20000,Velocidad nominal del motor,Configuración
+Yaskawa,GA800,40011,Base Frequency,R/W,Hz,0.01,0–400,Frecuencia base (V/f),Configuración
+Yaskawa,GA800,40012,Jog Frequency,R/W,Hz,0.01,0–400,Frecuencia en modo JOG,Configuración
+Yaskawa,GA800,40013,DC Braking Level,R/W,%,0.1,0–100,Nivel de frenado DC,Configuración
+Yaskawa,GA800,40014,DC Braking Time,R/W,s,0.1,0–30,Tiempo de frenado DC,Configuración
+Yaskawa,GA800,40015,S-Curve Acceleration,R/W,%,,0–100,Perfil de aceleración suave,Configuración
+Yaskawa,GA800,40016,S-Curve Deceleration,R/W,%,,0–100,Perfil de desaceleración suave,Configuración
+Yaskawa,GA800,30011,Rotation Direction,R,,1,"0=Forward
+1=Reverse",Dirección de giro real,Monitoreo
+Yaskawa,GA800,30012,Input Terminal Status,R,,1,Bit 0–15,Estado de entradas digitales,Diagnóstico
+Yaskawa,GA800,30013,Output Terminal Status,R,,1,Bit 0–15,Estado de salidas digitales,Diagnóstico
+Yaskawa,GA800,40017,Analog Input 1 Gain,R/W,%,,0–200,Ganancia entrada analógica 1,Configuración
+Yaskawa,GA800,40018,Analog Input 2 Gain,R/W,%,,0–200,Ganancia entrada analógica 2,Configuración
+Yaskawa,GA800,30014,Analog Input 1 Value,R,V or mA,0.001,0–10.0,Valor entrada analógica 1,Monitoreo
+Yaskawa,GA800,30015,Analog Input 2 Value,R,V or mA,0.001,0–10.0,Valor entrada analógica 2,Monitoreo
+Siemens,SINAMICS G120,40001,Speed Setpoint,R/W,Hz,0.01,0–400,Referencia de velocidad (P2000 = 100%),Control
+Siemens,SINAMICS G120,40002,Control Word,W,,1,"Bit 0: ON/OFF1
+Bit 1: ON/OFF2
+Bit 2: ON/OFF3
+Bit 3: Enable (Run)
+Bit 4: Fault Reset
+Bit 7: Jog
+Bit 8: Remote",Palabra de comandos de control,Control
+Siemens,SINAMICS G120,30001,Actual Speed,R,Hz,0.01,0–400,Velocidad real,Monitoreo
+Siemens,SINAMICS G120,30002,Actual Current,R,A,0.01,0–2000,Corriente real,Monitoreo
+Siemens,SINAMICS G120,30003,Status Word,R,,1,"Bit 0: Ready
+Bit 1: Running
+Bit 3: Fault
+Bit 10: At Setpoint",Estado,
+Siemens,SINAMICS G120,30004,Actual Torque,R,%,0.1,-200–200,Par real,Monitoreo
+Siemens,SINAMICS G120,30005,DC Link Voltage,R,V,1,0–1000,Tensión del bus DC,Monitoreo
+Siemens,SINAMICS G120,30006,Output Frequency,R,Hz,0.01,0–400,Frecuencia de salida,Monitoreo
+Siemens,SINAMICS G120,30007,Active Fault Code,R,,1,0–65535,Código de fallo activo,Diagnóstico
+Siemens,SINAMICS G120,30008,Last Fault Code,R,,1,0–65535,Último código de fallo,Diagnóstico
+Siemens,SINAMICS G120,30009,Heat Sink Temp,R,°C,1,-40–150,Temperatura del disipador,Monitoreo
+Siemens,SINAMICS G120,30010,Energy Consumption,R,kWh,1,0–4294967295,Energía total,Monitoreo
+Siemens,SINAMICS G120,40003,Ramp Up Time,R/W,s,0.1,0–6553.5,Tiempo de aceleración,Configuración
+Siemens,SINAMICS G120,40004,Ramp Down Time,R/W,s,0.1,0–6553.5,Tiempo de desaceleración,Configuración
+Siemens,SINAMICS G120,40005,Max Motor Speed,R/W,rpm,1,0–20000,Velocidad máxima del motor,Configuración
+Siemens,SINAMICS G120,40006,Motor Rated Current,R/W,A,0.01,0.01–2000,Corriente nominal,Configuración
+Siemens,SINAMICS G120,40007,Motor Rated Power,R/W,kW,0.01,0.01–9999.99,Potencia nominal,Configuración
+Siemens,SINAMICS G120,40008,Motor Rated Voltage,R/W,V,1,0–1000,Tensión nominal,Configuración
+Siemens,SINAMICS G120,40009,Motor Rated Frequency,R/W,Hz,0.01,0–400,Frecuencia nominal,Configuración
+Siemens,SINAMICS G120,40010,Jog Speed,R/W,Hz,0.01,0–400,Velocidad en JOG,Configuración
+Siemens,SINAMICS G120,40011,Reference Torque,R/W,%,0.1,0–200,Par de referencia,Configuración
+Siemens,SINAMICS G120,40012,Boost Voltage,R/W,V,1,0–100,Refuerzo de voltaje V/f,Configuración
+Siemens,SINAMICS G120,30011,Digital Input Status,R,,1,Bit 0–7,Estado entradas digitales,Diagnóstico
+Siemens,SINAMICS G120,30012,Analog Input 1,R,V or mA,0.001,0–10.0,Valor entrada analógica 1,Monitoreo
+Siemens,SINAMICS G120,30013,Analog Input 2,R,V or mA,0.001,0–10.0,Valor entrada analógica 2,Monitoreo
+Siemens,SINAMICS G120,40013,AI1 Filter Time,R/W,ms,1,0–10000,Tiempo de filtro entrada AI1,Configuración
+Siemens,SINAMICS G120,40014,AI2 Filter Time,R/W,ms,1,0–10000,Tiempo de filtro entrada AI2,Configuración
+Schneider Electric,ATV630,40001,Frequency Reference,R/W,Hz,0.01,0–599.99,Consigna de frecuencia,Control
+Schneider Electric,ATV630,40002,Command Word,W,,1,"Bit 0: Start (1)/Stop (0)
+Bit 1: Direction (1=Reverse)
+Bit 2: Jog
+Bit 3: DC Brake
+Bit 7: Fault Reset",Control,
+Schneider Electric,ATV630,30001,Output Frequency,R,Hz,0.01,0–599.99,Frecuencia real,Monitoreo
+Schneider Electric,ATV630,30002,Motor Current,R,A,0.1,0–2000,Corriente del motor,Monitoreo
+Schneider Electric,ATV630,30003,DC Bus Voltage,R,V,1,0–1000,Tensión del bus DC,Monitoreo
+Schneider Electric,ATV630,30004,Output Voltage,R,V,1,0–690,Tensión de salida,Monitoreo
+Schneider Electric,ATV630,30005,Status Word,R,,1,"Bit 0: Ready
+Bit 1: Running
+Bit 2: At Speed
+Bit 3: Fault",Estado,
+Schneider Electric,ATV630,30006,Active Fault,R,,1,0–65535,Alarma activa,Diagnóstico
+Schneider Electric,ATV630,30007,Last Fault,R,,1,0–65535,Última alarma,Diagnóstico
+Schneider Electric,ATV630,30008,Heat Sink Temp,R,°C,1,-40–150,Temperatura disipador,Monitoreo
+Schneider Electric,ATV630,30009,Output Power,R,kW,0.1,0–9999.9,Potencia de salida,Monitoreo
+Schneider Electric,ATV630,30010,Energy Counter,R,kWh,1,0–4294967295,Contador de energía,Monitoreo
+Schneider Electric,ATV630,40003,Accel Time,R/W,s,0.1,0.1–9999.9,Tiempo de aceleración,Configuración
+Schneider Electric,ATV630,40004,Decel Time,R/W,s,0.1,0.1–9999.9,Tiempo de desaceleración,Configuración
+Schneider Electric,ATV630,40005,Max Frequency,R/W,Hz,0.01,0–599.99,Frecuencia máxima,Configuración
+Schneider Electric,ATV630,40006,Min Frequency,R/W,Hz,0.01,0–599.99,Frecuencia mínima,Configuración
+Schneider Electric,ATV630,40007,Motor Rated Current,R/W,A,0.1,0.1–2000,Corriente nominal motor,Configuración
+Schneider Electric,ATV630,40008,Motor Rated Voltage,R/W,V,1,0–690,Tensión nominal motor,Configuración
+Schneider Electric,ATV630,40009,Motor Rated Power,R/W,kW,0.1,0.1–9999.9,Potencia nominal motor,Configuración
+Schneider Electric,ATV630,40010,Motor Rated Speed,R/W,rpm,1,0–20000,Velocidad nominal motor,Configuración
+Schneider Electric,ATV630,40011,Jog Frequency,R/W,Hz,0.01,0–599.99,Frecuencia JOG,Configuración
+Schneider Electric,ATV630,40012,Boost Voltage,R/W,V,1,0–100,Refuerzo V/f,Configuración
+Schneider Electric,ATV630,40013,S-Curve Profile,R/W,%,,0–100,Perfil S-curve,Configuración
+Schneider Electric,ATV630,30011,Digital Input Status,R,,1,Bit 0–7,Estado entradas digitales,Diagnóstico
+Schneider Electric,ATV630,30012,Analog Input 1,R,V or mA,0.001,0–10.0,Valor AI1,Monitoreo
+Schneider Electric,ATV630,30013,Analog Input 2,R,V or mA,0.001,0–10.0,Valor AI2,Monitoreo
+Schneider Electric,ATV630,40014,AI1 Min Value,R/W,%,0.1,0–100,Valor mínimo AI1,Configuración
+Schneider Electric,ATV630,40015,AI1 Max Value,R/W,%,0.1,0–100,Valor máximo AI1,Configuración
+Danfoss,FC-302,40001,Frequency Setpoint,R/W,Hz,0.01,0–400,Referencia de frecuencia,Control
+Danfoss,FC-302,40002,Control Word,W,,1,"Bit 0: ON/OFF
+Bit 2: Reverse
+Bit 3: DC Brake
+Bit 4: Quick Stop
+Bit 7: Reset",Control,
+Danfoss,FC-302,30001,Output Frequency,R,Hz,0.01,0–400,Frecuencia real,Monitoreo
+Danfoss,FC-302,30002,Output Current,R,A,0.1,0–2000,Corriente de salida,Monitoreo
+Danfoss,FC-302,30003,DC Link Voltage,R,V,1,0–1000,Tensión bus DC,Monitoreo
+Danfoss,FC-302,30004,Status Word,R,,1,"Bit 0: Ready, Bit 1: Running, Bit 2: At Speed, Bit 3: Fault",Estado,
+Danfoss,FC-302,30005,Actual Torque,R,%,1,-200–200,Par real,Monitoreo
+Danfoss,FC-302,30006,Heat Sink Temp,R,°C,1,-40–150,Temperatura disipador,Monitoreo
+Danfoss,FC-302,30007,Active Alarm,R,,1,0–65535,Alarma activa,Diagnóstico
+Danfoss,FC-302,30008,Last Alarm,R,,1,0–65535,Última alarma,Diagnóstico
+Danfoss,FC-302,30009,Output Power,R,kW,0.1,0–9999.9,Potencia salida,Monitoreo
+Danfoss,FC-302,40003,Ramp 1 Ramp Up Time,R/W,s,0.1,0.01–3600,Tiempo aceleración rampa 1,Configuración
+Danfoss,FC-302,40004,Ramp 1 Ramp Down Time,R/W,s,0.1,0.01–3600,Tiempo desaceleración rampa 1,Configuración
+Danfoss,FC-302,40005,Max Output Frequency,R/W,Hz,0.01,0–400,Frecuencia máxima salida,Configuración
+Danfoss,FC-302,40006,Motor Rated Current,R/W,A,0.1,0.1–2000,Corriente nominal motor,Configuración
+Danfoss,FC-302,40007,Motor Rated Voltage,R/W,V,1,0–690,Tensión nominal motor,Configuración
+Danfoss,FC-302,40008,Motor Rated Power,R/W,kW,0.1,0.1–9999.9,Potencia nominal motor,Configuración
+Danfoss,FC-302,40009,Motor Rated Speed,R/W,rpm,1,0–20000,Velocidad nominal motor,Configuración
+Danfoss,FC-302,40010,Jog Frequency,R/W,Hz,0.01,0–400,Frecuencia JOG,Configuración
+Danfoss,FC-302,40011,DC Brake Current,R/W,%,0.1,0–100,Corriente frenado DC,Configuración
+Danfoss,FC-302,40012,DC Brake Time,R/W,s,0.1,0–60,Tiempo frenado DC,Configuración
+Danfoss,FC-302,40013,S-Curve Factor,R/W,%,,0–100,Factor curva S,Configuración
+Danfoss,FC-302,30010,Digital Input Status,R,,1,Bit 0–7,Estado entradas digitales,Diagnóstico
+Danfoss,FC-302,30011,Analog Input 53,R,V,0.001,0–10.0,Valor entrada analógica 53,Monitoreo
+Danfoss,FC-302,30012,Analog Input 54,R,mA,0.001,0–20.0,Valor entrada analógica 54,Monitoreo
+Danfoss,FC-302,40014,AI53 Min Scaling,R/W,%,0.1,0–100,Escalado mínimo AI53,Configuración
+Danfoss,FC-302,40015,AI53 Max Scaling,R/W,%,0.1,0–100,Escalado máximo AI53,Configuración
+Lenze,i550,40001,Speed Setpoint,R/W,Hz,0.1,0–4000,Referencia velocidad (0.1 Hz),Control
+Lenze,i550,40002,Control Word,W,,1,"Bit 0: ON/OFF, Bit 1: Enable, Bit 2: Reverse, Bit 7: Fault Reset, Bit 8: Jog",Control,
+Lenze,i550,30001,Actual Speed,R,Hz,0.1,0–4000,Velocidad real,Monitoreo
+Lenze,i550,30002,Status Word,R,,1,"Bit 0: Ready, Bit 1: Running, Bit 2: At Speed, Bit 3: Fault",Estado,
+Lenze,i550,30003,Actual Current,R,A,0.1,0–2000,Corriente real,Monitoreo
+Lenze,i550,30004,DC Bus Voltage,R,V,1,0–1000,Tensión bus DC,Monitoreo
+Lenze,i550,30005,Actual Torque,R,%,0.1,-200–200,Par real,Monitoreo
+Lenze,i550,30006,Heat Sink Temp,R,°C,1,-40–150,Temperatura disipador,Monitoreo
+Lenze,i550,30007,Active Fault,R,,1,0–65535,Fallo activo,Diagnóstico
+Lenze,i550,40003,Ramp Up Time,R/W,s,0.1,0.1–3600,Tiempo aceleración,Configuración
+Lenze,i550,40004,Ramp Down Time,R/W,s,0.1,0.1–3600,Tiempo desaceleración,Configuración
+Lenze,i550,40005,Motor Rated Current,R/W,A,0.1,0.1–2000,Corriente nominal,Configuración
+Lenze,i550,40006,Motor Rated Voltage,R/W,V,1,0–690,Tensión nominal,Configuración
+Lenze,i550,40007,Motor Rated Power,R/W,kW,0.1,0.1–9999.9,Potencia nominal,Configuración
+Lenze,i550,40008,Max Speed,R/W,rpm,1,0–20000,Velocidad máxima,Configuración
+Lenze,i550,40009,Jog Speed,R/W,Hz,0.1,0–4000,Velocidad JOG,Configuración
+Lenze,i550,30008,Digital Input Status,R,,1,Bit 0–7,Estado entradas digitales,Diagnóstico
+Invertek,Optidrive E3,40001,Frequency Reference,R/W,Hz,0.01,0–400,Consigna de frecuencia,Control
+Invertek,Optidrive E3,40002,Control Word,W,,1,"Bit 0: Run
+Bit 1: Direction (1=Reverse)
+Bit 2: Jog
+Bit 3: Fault Reset
+Bit 7: Enable",Control,
+Invertek,Optidrive E3,30001,Output Frequency,R,Hz,0.01,0–400,Frecuencia real,Monitoreo
+Invertek,Optidrive E3,30002,Drive Status,R,,1,"Bit 0: Ready
+Bit 1: Running
+Bit 2: At Speed
+Bit 3: Fault",Estado,
+Invertek,Optidrive E3,30003,Output Current,R,A,0.1,0–2000,Corriente de salida,Monitoreo
+Invertek,Optidrive E3,30004,DC Bus Voltage,R,V,1,0–1000,Tensión bus DC,Monitoreo
+Invertek,Optidrive E3,30005,Output Voltage,R,V,1,0–690,Tensión de salida,Monitoreo
+Invertek,Optidrive E3,30006,Active Fault,R,,1,0–65535,Alarma activa,Diagnóstico
+Invertek,Optidrive E3,30007,Last Fault,R,,1,0–65535,Última alarma,Diagnóstico
+Invertek,Optidrive E3,30008,Heat Sink Temp,R,°C,1,-10–120,Temperatura disipador,Monitoreo
+Invertek,Optidrive E3,40003,Accel Time,R/W,s,0.1,0.1–3600,Tiempo aceleración,Configuración
+Invertek,Optidrive E3,40004,Decel Time,R/W,s,0.1,0.1–3600,Tiempo desaceleración,Configuración
+Invertek,Optidrive E3,40005,Max Frequency,R/W,Hz,0.01,0–400,Frecuencia máxima,Configuración
+Invertek,Optidrive E3,40006,Min Frequency,R/W,Hz,0.01,0–400,Frecuencia mínima,Configuración
+Invertek,Optidrive E3,40007,Motor Rated Current,R/W,A,0.1,0.1–2000,Corriente nominal,Configuración
+Invertek,Optidrive E3,40008,Motor Rated Voltage,R/W,V,1,0–690,Tensión nominal,Configuración
+Invertek,Optidrive E3,40009,Jog Frequency,R/W,Hz,0.01,0–400,Frecuencia JOG,Configuración
+Invertek,Optidrive E3,40010,Boost Voltage,R/W,V,1,0–100,Refuerzo V/f,Configuración
+Invertek,Optidrive E3,30009,Digital Input Status,R,,1,Bit 0–7,Estado entradas digitales,Diagnóstico
+Invertek,Optidrive E3,30010,Analog Input 1,R,V,0.001,0–10.0,Valor AI1,Monitoreo
+Invertek,Optidrive E3,30011,Analog Input 2,R,mA,0.001,0–20.0,Valor AI2,Monitoreo
+HNC Electric,HNC-900G,40001,Frequency Command,R/W,Hz,0.01,0–400,Comando de frecuencia,Control
+HNC Electric,HNC-900G,40002,Control Word,W,,1,"Bit 0: Start
+Bit 1: Reverse
+Bit 2: Jog
+Bit 3: DC Brake
+Bit 7: Fault Reset",Control,
+HNC Electric,HNC-900G,30001,Output Frequency,R,Hz,0.01,0–400,Frecuencia real,Monitoreo
+HNC Electric,HNC-900G,30002,Output Current,R,A,0.1,0–2000,Corriente de salida,Monitoreo
+HNC Electric,HNC-900G,30003,DC Bus Voltage,R,V,1,0–1000,Tensión bus DC,Monitoreo
+HNC Electric,HNC-900G,30004,Drive Status,R,,1,"Bit 0: Ready
+Bit 1: Running
+Bit 2: At Speed
+Bit 3: Fault",Estado,
+HNC Electric,HNC-900G,30005,Active Alarm,R,,1,0–65535,Alarma activa,Diagnóstico
+HNC Electric,HNC-900G,30006,Last Alarm,R,,1,0–65535,Última alarma,Diagnóstico
+HNC Electric,HNC-900G,30007,Heat Sink Temp,R,°C,1,-10–120,Temperatura disipador,Monitoreo
+HNC Electric,HNC-900G,30008,Output Power,R,kW,0.1,0–9999.9,Potencia salida,Monitoreo
+HNC Electric,HNC-900G,40003,Accel Time,R/W,s,0.1,0.1–3600,Tiempo aceleración,Configuración
+HNC Electric,HNC-900G,40004,Decel Time,R/W,s,0.1,0.1–3600,Tiempo desaceleración,Configuración
+HNC Electric,HNC-900G,40005,Max Frequency,R/W,Hz,0.01,0–400,Frecuencia máxima,Configuración
+HNC Electric,HNC-900G,40006,Min Frequency,R/W,Hz,0.01,0–400,Frecuencia mínima,Configuración
+HNC Electric,HNC-900G,40007,Motor Rated Current,R/W,A,0.1,0.1–2000,Corriente nominal,Configuración
+HNC Electric,HNC-900G,40008,Motor Rated Voltage,R/W,V,1,0–690,Tensión nominal,Configuración
+HNC Electric,HNC-900G,40009,Jog Frequency,R/W,Hz,0.01,0–400,Frecuencia JOG,Configuración
+HNC Electric,HNC-900G,30009,Digital Input Status,R,,1,Bit 0–7,Estado entradas digitales,Diagnóstico
+HNC Electric,HNC-900G,30010,Analog Input 1,R,V,0.001,0–10.0,Valor AI1,Monitoreo
+HNC Electric,HNC-900G,30011,Analog Input 2,R,mA,0.001,0–20.0,Valor AI2,Monitoreo
+ABB,ACS880,40001,Speed Reference,R/W,Hz,0.1,0–32767,Referencia de velocidad (0.1 Hz),Control
+ABB,ACS880,40002,Control Word,W,,1,"Bit 0: ON/OFF1
+Bit 1: OFF2
+Bit 2: OFF3
+Bit 3: Enable (Run)
+Bit 4: Fault Reset
+Bit 7: Jog, Bit 8: Remote",Control,
+ABB,ACS880,30001,Actual Speed,R,Hz,0.1,0–32767,Velocidad real,Monitoreo
+ABB,ACS880,30002,Actual Current,R,A,0.1,0–32767,Corriente real,Monitoreo
+ABB,ACS880,30003,DC Voltage,R,V,1,0–32767,Tensión bus DC,Monitoreo
+ABB,ACS880,30004,Status Word,R,,1,"Bit 0: Ready
+Bit 1: Running
+Bit 3: Fault
+Bit 10: At Setpoint",Estado,
+ABB,ACS880,30005,Actual Torque,R,%,0.1,-32767–32767,Par real,Monitoreo
+ABB,ACS880,30006,Active Alarm,R,,1,0–65535,Alarma activa,Diagnóstico
+ABB,ACS880,30007,Last Alarm,R,,1,0–65535,Última alarma,Diagnóstico
+ABB,ACS880,30008,Heat Sink Temp,R,°C,1,-40–150,Temperatura disipador,Monitoreo
+ABB,ACS880,40003,Ramp 1 Up Time,R/W,s,0.1,0–3276.7,Tiempo aceleración,Configuración
+ABB,ACS880,40004,Ramp 1 Down Time,R/W,s,0.1,0–3276.7,Tiempo desaceleración,Configuración
+ABB,ACS880,40005,Motor Rated Current,R/W,A,0.1,0.1–3276.7,Corriente nominal,Configuración
+ABB,ACS880,40006,Motor Rated Voltage,R/W,V,1,0–1000,Tensión nominal,Configuración
+ABB,ACS880,40007,Motor Rated Power,R/W,kW,0.1,0.1–9999.9,Potencia nominal,Configuración
+ABB,ACS880,40008,Motor Rated Speed,R/W,rpm,1,0–20000,Velocidad nominal,Configuración
+ABB,ACS880,40009,Jog Speed,R/W,Hz,0.1,0–3276.7,Velocidad JOG,Configuración
+ABB,ACS880,30009,Digital Input Status,R,,1,Bit 0–15,Estado entradas digitales,Diagnóstico
+ABB,ACS880,30010,Analog Input AI1,R,V,0.001,0–10.0,Valor entrada AI1,Monitoreo
+Mitsubishi,FR-A800,40001,Frequency Command,R/W,Hz,0.01,0–400,Comando de frecuencia,Control
+Mitsubishi,FR-A800,40002,Control Word,W,,1,"Bit 0: Start
+Bit 1: Stop
+Bit 2: Reverse
+Bit 3: Jog
+Bit 4: DC Brake
+Bit 7: Fault Reset",Control,
+Mitsubishi,FR-A800,30001,Output Frequency,R,Hz,0.01,0–400,Frecuencia real,Monitoreo
+Mitsubishi,FR-A800,30002,Output Current,R,A,0.1,0–2000,Corriente de salida,Monitoreo
+Mitsubishi,FR-A800,30003,Output Voltage,R,V,1,0–690,Tensión de salida,Monitoreo
+Mitsubishi,FR-A800,30004,DC Bus Voltage,R,V,1,0–1000,Tensión bus DC,Monitoreo
+Mitsubishi,FR-A800,30005,Status Word,R,,1,"Bit 0: Ready
+Bit 1: Running
+Bit 2: At Speed
+Bit 3: Fault",Estado,
+Mitsubishi,FR-A800,30006,Active Error,R,,1,0–65535,Error activo,Diagnóstico
+Mitsubishi,FR-A800,30007,Last Error,R,,1,0–65535,Último error,Diagnóstico
+Mitsubishi,FR-A800,30008,Inverter Temp,R,°C,1,-10–120,Temperatura del inversor,Monitoreo
+Mitsubishi,FR-A800,40003,Accel Time,R/W,s,0.1,0.1–3600,Tiempo aceleración,Configuración
+Mitsubishi,FR-A800,40004,Decel Time,R/W,s,0.1,0.1–3600,Tiempo desaceleración,Configuración
+Mitsubishi,FR-A800,40005,Max Frequency,R/W,Hz,0.01,0–400,Frecuencia máxima,Configuración
+Mitsubishi,FR-A800,40006,Min Frequency,R/W,Hz,0.01,0–400,Frecuencia mínima,Configuración
+Mitsubishi,FR-A800,40007,Motor Rated Current,R/W,A,0.1,0.1–2000,Corriente nominal,Configuración
+Mitsubishi,FR-A800,40008,Motor Rated Voltage,R/W,V,1,0–690,Tensión nominal,Configuración
+Mitsubishi,FR-A800,40009,Jog Frequency,R/W,Hz,0.01,0–400,Frecuencia JOG,Configuración
+Mitsubishi,FR-A800,30009,Digital Input Status,R,,1,Bit 0–7,Estado entradas digitales,Diagnóstico
+Mitsubishi,FR-A800,30010,Analog Input 1,R,V,0.001,0–10.0,Valor AI1,Monitoreo
+Delta,VFD-EL,40001,Frequency Command,R/W,Hz,0.01,0–400,Comando de frecuencia,Control
+Delta,VFD-EL,40002,Control Word,W,,1,"Bit 0: Run
+Bit 1: Jog
+Bit 2: Reverse
+Bit 7: Fault Reset",Control,
+Delta,VFD-EL,30001,Output Frequency,R,Hz,0.01,0–400,Frecuencia real,Monitoreo
+Delta,VFD-EL,30002,Output Current,R,A,0.1,0–2000,Corriente de salida,Monitoreo
+Delta,VFD-EL,30003,DC Bus Voltage,R,V,1,0–1000,Tensión bus DC,Monitoreo
+Delta,VFD-EL,30004,Output Voltage,R,V,1,0–690,Tensión de salida,Monitoreo
+Delta,VFD-EL,30005,Status Word,R,,1,"Bit 0: Ready
+Bit 1: Running
+Bit 2: At Speed
+Bit 3: Fault",Estado,
+Delta,VFD-EL,30006,Active Fault,R,,1,0–65535,Falla activa,Diagnóstico
+Delta,VFD-EL,30007,Last Fault,R,,1,0–65535,Última falla,Diagnóstico
+Delta,VFD-EL,30008,Inverter Temp,R,°C,1,-10–120,Temperatura del inversor,Monitoreo
+Delta,VFD-EL,40003,Accel Time,R/W,s,0.1,0.1–3600,Tiempo aceleración,Configuración
+Delta,VFD-EL,40004,Decel Time,R/W,s,0.1,0.1–3600,Tiempo desaceleración,Configuración
+Delta,VFD-EL,40005,Max Frequency,R/W,Hz,0.01,0–400,Frecuencia máxima,Configuración
+Delta,VFD-EL,40006,Min Frequency,R/W,Hz,0.01,0–400,Frecuencia mínima,Configuración
+Delta,VFD-EL,40007,Motor Rated Current,R/W,A,0.1,0.1–2000,Corriente nominal,Configuración
+Delta,VFD-EL,40008,Motor Rated Voltage,R/W,V,1,0–690,Tensión nominal,Configuración
+Delta,VFD-EL,40009,Jog Frequency,R/W,Hz,0.01,0–400,Frecuencia JOG,Configuración
+Delta,VFD-EL,30009,Digital Input Status,R,,1,Bit 0–7,Estado entradas digitales,Diagnóstico
+Delta,VFD-EL,30010,Analog Input AVI,R,V,0.001,0–10.0,Valor entrada AVI,Monitoreo
+Delta,VFD-EL,30011,Analog Input ACI,R,mA,0.001,0–20.0,Valor entrada ACI,Monitoreo

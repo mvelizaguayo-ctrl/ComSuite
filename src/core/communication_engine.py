@@ -10,6 +10,8 @@ from .plugin_loader import PluginLoader
 from ..protocols.base_protocol.protocol_interface import ProtocolInterface
 from ..protocols.base_protocol.device_interface import DeviceInterface
 from ..config.config_manager import ConfigManager
+# Usar el DeviceManager centralizado para evitar duplicación de responsabilidades
+from .device_manager import DeviceManager as CoreDeviceManager
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -31,11 +33,12 @@ class CommunicationEngine(QObject):
     
     def __init__(self):
         super().__init__()
-        self.device_manager = DeviceManager()  # Gestor abstracto de dispositivos
+        # Instanciar el DeviceManager centralizado (contiene create_vfd_device, register/unregister, etc.)
+        self.device_manager = CoreDeviceManager()
         self.plugin_loader = PluginLoader()  # Descubre plugins en /protocols/
         self.config_manager = ConfigManager()  # Gestor de configuración
         self.loaded_protocols: Dict[str, ProtocolInterface] = {}
-        
+
         # Cargar plugins automáticamente al iniciar
         self._load_plugins()
         
@@ -103,39 +106,4 @@ class CommunicationEngine(QObject):
             return False
 
 
-class DeviceManager:
-    """Gestor abstracto de dispositivos"""
-    
-    def __init__(self):
-        self.devices: Dict[str, DeviceInterface] = {}
-        
-    def add_device(self, device: DeviceInterface):
-        """Agregar un dispositivo al gestor"""
-        self.devices[device.device_id] = device
-        
-    def remove_device(self, device_id: str):
-        """Eliminar un dispositivo del gestor"""
-        if device_id in self.devices:
-            del self.devices[device_id]
-            
-    def get_device(self, device_id: str) -> Optional[DeviceInterface]:
-        """Obtener un dispositivo por su ID"""
-        return self.devices.get(device_id)
-    
-    def get_all_devices(self) -> Dict[str, DeviceInterface]:
-        """Obtener todos los dispositivos"""
-        return self.devices.copy()
-    
-    def connect_device(self, device_id: str) -> bool:
-        """Conectar un dispositivo"""
-        device = self.get_device(device_id)
-        if device:
-            return device.connect()
-        return False
-    
-    def disconnect_device(self, device_id: str) -> bool:
-        """Desconectar un dispositivo"""
-        device = self.get_device(device_id)
-        if device:
-            return device.disconnect()
-        return False
+# Se utiliza el DeviceManager definido en src/core/device_manager.py
